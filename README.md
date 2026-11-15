@@ -88,6 +88,66 @@ które mody trzeba wziąć razem.
 Pełny spis z numerami wpisów rejestru: [mod-recipes/README.md](mod-recipes/README.md). Historia zmian:
 [CHANGELOG.md](CHANGELOG.md).
 
+## Jak to wygląda
+
+Zrzuty z działającej instalacji autora (numery seryjne modułów, typy obwodów, reakcje wejść i nazwa obiektu są
+zakryte). Okno ma co najmniej 900 px szerokości, więc działa widok na komputer (mod 08).
+
+**Ekran główny** z mniejszymi zdjęciami pomieszczeń i menu ustawień po lewej (mody 23, 24, 25):
+
+![Ekran główny](docs/screenshots/24-ekran-glowny.png)
+
+**Tabela urządzeń** z filtrami i wyszukiwaniem (mod 19):
+
+![Tabela urządzeń](docs/screenshots/19-tabela-urzadzen.png)
+
+**Pomieszczenie**: kafelki z siłą sygnału i przycisk „Tabela urządzeń” (mod 26), a po kliknięciu tabela urządzeń tego
+pomieszczenia (mod 24):
+
+![Kafelki z sygnałem](docs/screenshots/26-sygnal-na-kafelkach.png)
+
+![Tabela pomieszczenia](docs/screenshots/24-tabela-pomieszczenia.png)
+
+**Tabela awarii** (mod 21) i **dziennik zdarzeń** w wierszach z wyszukiwaniem (mod 22):
+
+![Tabela awarii](docs/screenshots/21-tabela-awarii.png)
+
+![Dziennik zdarzeń](docs/screenshots/22-dziennik-zdarzen.png)
+
+**Menu ustawień** ze zwijanymi sekcjami (mody 23 i 25) i „Monitoring” przeniesiony do ekranu Integracja (mod 25):
+
+<p>
+<img src="docs/screenshots/23-panel-boczny.png" alt="Menu ustawień" width="32%">
+<img src="docs/screenshots/23-panel-boczny-rozwiniety.png" alt="Menu ustawień rozwinięte" width="32%">
+</p>
+
+![Integracja z Monitoringiem](docs/screenshots/25-integracja-monitoring.png)
+
+**Rutyny**: lista jako tabela (mod 18), edycja z pełnym opisem warunków i przełącznikiem Oraz/Lub (mody 10 i 17),
+krótka lista wyzwalaczy ze skrótami Alt+1…5 (mod 12) i wybór urządzeń ze zwiniętymi pomieszczeniami i szukaniem, z
+wartością wybieraną od razu (mody 13 i 14):
+
+![Lista rutyn](docs/screenshots/18-lista-rutyn.png)
+
+![Edycja rutyny](docs/screenshots/10-edycja-rutyny.png)
+
+![Lista wyzwalaczy](docs/screenshots/12-lista-wyzwalaczy.png)
+
+![Wybór urządzeń](docs/screenshots/13-wybor-urzadzen.png)
+
+**Pytanie przed poleceniem dla wielu urządzeń** (mod 20):
+
+![Potwierdzenie sterowania](docs/screenshots/20-potwierdzenie.png)
+
+**Edytor ekranów klawiatur dotykowych** (mod 01, **BETA**): ekrany i warstwy po lewej, podgląd w środku, właściwości
+po prawej; wybór ikon z siatki:
+
+![Edytor ekranów](docs/screenshots/01-edytor-ekranow.png)
+
+![Edytor: właściwości widżetu](docs/screenshots/01-edytor-widzet.png)
+
+![Edytor: wybór ikon](docs/screenshots/01-edytor-ikony.png)
+
 ## Zbuduj instalator krok po kroku
 
 Opis dotyczy oryginału Satel **1.2.0**, na którym oparte są przepisy. Autor budował na Linuksie (Ubuntu/Debian) i tam
@@ -249,7 +309,7 @@ z wszystkimi modami:
 | `BE-WAVE-Soft-<wersja Satel>-modX.Y-arm64.pkg` | macOS na Apple Silicon (M1 i nowsze) |
 | `SHA256SUMS.txt` | sumy kontrolne; sprawdzenie: `sha256sum -c SHA256SUMS.txt --ignore-missing` |
 
-Wersja ma postać `<wersja Satel>-modX.Y`, np. `1.2.0-mod3.0`: oryginał Satel 1.2.0, X rośnie przy nowych funkcjach,
+Wersja ma postać `<wersja Satel>-modX.Y`, np. `1.2.0-mod3.1`: oryginał Satel 1.2.0, X rośnie przy nowych funkcjach,
 Y przy poprawkach. Starsze wydania nazywały się `<wersja Satel>-port.N` (ostatnie `1.2.0-port.2`). Opis wydania to
 sekcja tej wersji z [CHANGELOG.md](CHANGELOG.md): oryginał Satel, wersja Electrona, co sprawdzono, co tylko zbudowano
 i czego nie sprawdzono. Instalacja jak w kroku 7; przy `.pkg` z wydania obowiązuje to samo ostrzeżenie macOS.

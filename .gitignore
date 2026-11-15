@@ -23,3 +23,4 @@ work/working/tools/test/last-output.js
 # TSH Soft reverse engineering workspace (Satel binaries, Ghidra project, samples)
 work/re-tsh/
 *.bac.*
+docs/screenshots-raw/

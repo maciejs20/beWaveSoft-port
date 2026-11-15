@@ -1,6 +1,6 @@
 # Portowanie kolejnego wydania Satel
 
-Stan na 2026-11-15: oryginał 1.2.0 (Electron 44.9.3), ostatnie wydanie portu `1.2.0-port.2` (2026-11-14), następne `1.2.0-mod3.0` (nowy schemat wersji), w toku ([Unreleased] w `CHANGELOG.md`) przebudowa edytora ekranów TSH (wpisy 044–054). Procedura powstała przy przejściu 1.1.0 → 1.2.0 (`1.2.0-port.1`). Ten plik jest jedynym źródłem procedury portowania i zebranych ustaleń. `REJESTR-ZMIAN.md` („Odtworzenie po aktualizacji źródła”) ma jej skrót. Przy rozbieżności obowiązuje ten plik.
+Stan na 2026-11-15: oryginał 1.2.0 (Electron 44.9.3), ostatnie wydanie portu `1.2.0-port.2` (2026-11-14), następne `1.2.0-mod3.1` (nowy schemat wersji; `1.2.0-mod3.0` był tylko buildem testowym), w toku ([Unreleased] w `CHANGELOG.md`) przebudowa edytora ekranów TSH (wpisy 044–054). Procedura powstała przy przejściu 1.1.0 → 1.2.0 (`1.2.0-port.1`). Ten plik jest jedynym źródłem procedury portowania i zebranych ustaleń. `REJESTR-ZMIAN.md` („Odtworzenie po aktualizacji źródła”) ma jej skrót. Przy rozbieżności obowiązuje ten plik.
 
 ## Cel
 
