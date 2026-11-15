@@ -125,7 +125,8 @@ pomieszczenia (mod 24):
 
 **Rutyny**: lista jako tabela (mod 18), edycja z pełnym opisem warunków i przełącznikiem Oraz/Lub (mody 10 i 17),
 krótka lista wyzwalaczy ze skrótami Alt+1…5 (mod 12) i wybór urządzeń ze zwiniętymi pomieszczeniami i szukaniem, z
-wartością wybieraną od razu (mody 13 i 14):
+wartością wybieraną od razu (mody 13 i 14). Wybór urządzeń to panel z modu 15 (przycisk „Zatwierdź” wraca do rutyny);
+przy oknie co najmniej 1300 px szerokości rutyna i panel są obok siebie, w węższym oknie panel zastępuje rutynę:
 
 ![Lista rutyn](docs/screenshots/18-lista-rutyn.png)
 
