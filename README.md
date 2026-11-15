@@ -51,38 +51,39 @@ Agent łączy jedno z drugim, więc nie musi zgadywać.
 
 ## Mody
 
-Mody **01–07 są podstawą portu**: bez nich aplikacja nie działa na Linuksie i macOS albo działa źle. Mod **08**
-włącza osobną drogę dla desktopu (okno co najmniej 900 px), na której działają mody 09–26 i edytor ekranów z modu 01.
-Mody 09–26 są opcjonalne; kolumna „Wymaga” mówi, które trzeba wziąć razem.
+Mod to jedna zmiana programu Satel. Mody **01–07** są niezbędne: bez nich program nie działa na Linuksie i macOS
+albo działa źle. Mod **08** dodaje osobny widok na komputer (okno co najmniej 900 px szerokości); dopiero w nim działają
+ulepszenia z modów 09–26 i edytor ekranów z modu 01. Mody 09–26 możesz wybrać według potrzeb. Kolumna „Wymaga” mówi,
+które mody trzeba wziąć razem.
 
-| Nr | Mod | Co daje | Wymaga |
+| Nr | Mod | Co to zmienia dla Ciebie | Wymaga |
 |---|---|---|---|
-| [01](mod-recipes/01-tsh-soft.md) | Edytor ekranów klawiatur zamiast TSH Soft (**BETA**) | TSH Soft działa tylko na Windows, więc jest wyłączony. Na desktopie wbudowany edytor ekranów INT-TSH2 i INT-TSG2: podgląd jak w TSH Soft, widżety, warstwy, cofanie, pliki na kartę microSD. | 07; edytor: 08 |
-| [02](mod-recipes/02-aktualizacje.md) | Aktualizacje Satel wyłączone | Serwer Satel ma tylko instalatory Windows; program nie próbuje ich pobierać. | — |
-| [03](mod-recipes/03-klucz-bazy-realm.md) | Klucz bazy bez magazynu sekretów | Lokalna baza nie znika po restarcie sesji na Linuksie (klucz w pliku z prawami `0600`). | — |
-| [04](mod-recipes/04-wifi-linux.md) | Wi-Fi przez `nmcli` | Łączenie z siecią centrali przy konfiguracji działa na Linuksie (NetworkManager zamiast poleceń Windows). Na macOS ta funkcja nadal nie działa (znana luka). | — |
-| [05](mod-recipes/05-zamykanie-aplikacji.md) | Zamykanie aplikacji | Zamknięcie okna kończy program także na macOS; „Zakończ” bez błędu. | — |
-| [06](mod-recipes/06-natywne-moduly-i-binaria.md) | Moduły natywne | Baza Realm i ffmpeg w wersjach dla Linuksa i macOS zamiast Windows. | — |
-| [07](mod-recipes/07-budowanie-i-instalatory.md) | Budowanie i instalatory | Budowanie aplikacji i paczek `.deb` / `.pkg`, aktualizacja bez utraty danych. | 06 |
-| [08](mod-recipes/08-droga-desktopowa.md) | Droga desktopowa | Jeden przełącznik: nowe zachowanie tylko w szerokim oknie, w wąskim oryginał Satel. | — |
-| [09](mod-recipes/09-kroki-warunku-i-akcji-domyslne.md) | Rozsądne wartości domyślne w rutynach | Nowa akcja zaczyna od „Włącz”, warunek od „Stan wejścia”, bez zbędnego komunikatu. | 08 |
-| [10](mod-recipes/10-podsumowanie-warunkow-i-akcji.md) | Pełne podsumowanie rutyny | Karty warunków i akcji pokazują wszystkie urządzenia i operator (Lub/Oraz) zamiast „+3”. | 08 |
-| [11](mod-recipes/11-zamykanie-krokow-x-esc.md) | X i Esc zamykają jeden krok | Zamknięcie okna warunku nie wyrzuca niezapisanej rutyny. | 08 |
-| [12](mod-recipes/12-listy-wyzwalaczy-i-akcji.md) | Zwarte listy wyzwalaczy i akcji | Cała lista widoczna naraz, skróty klawiszowe, wybrana pozycja w widoku. | 08, 09 |
-| [13](mod-recipes/13-wybor-urzadzen.md) | Wybór urządzeń z szukaniem | Zwinięte pomieszczenia, mniejsze wiersze, szukanie po nazwie. | 08 |
-| [14](mod-recipes/14-wartosci-w-miejscu.md) | Wartości wybierane w miejscu | Wartość warunku i opcja akcji bez otwierania dodatkowego okna. | 08 |
-| [15](mod-recipes/15-jeden-ekran-z-panelem.md) | Rutyna na jednym ekranie | Rutyna widoczna cały czas, warunek lub akcja w panelu obok zamiast stosu okien. | 08, 11, 12 |
-| [16](mod-recipes/16-zapis-rutyny.md) | Bezpieczny zapis rutyny | Jeden przycisk zapisu, `Ctrl+Enter`, czytelny błąd bez utraty rutyny, krótki komunikat. | 08, 12, 15 |
-| [17](mod-recipes/17-zwarty-ekran-rutyny.md) | Zwarty ekran rutyny | Cała rutyna mieści się na ekranie bez przewijania. | 08, 15 |
-| [18](mod-recipes/18-lista-rutyn-tabela.md) | Lista rutyn i scen jako tabela | Widać warunki i akcje każdej rutyny zamiast dużych kafelków. | 08 |
-| [19](mod-recipes/19-tabela-obiektow.md) | Tabela obiektów | Tabela urządzeń z kluczowymi parametrami, wejścia i wyjścia osobno, szukanie, przejście do szczegółów, pozycja „Lista urządzeń” w panelu; niczym nie steruje. | 08 |
-| [20](mod-recipes/20-potwierdzenie-sterowania.md) | Potwierdzenie poleceń grupowych | „Włącz wszystko” i podobne pytają przed wysłaniem; pojedyncze wyjście steruje od razu. | 08 |
-| [21](mod-recipes/21-tabela-awarii.md) | Tabela awarii | Aktywne awarie w zwartej tabeli zamiast dużych kart. | 08, 19 |
-| [22](mod-recipes/22-dziennik-zdarzen.md) | Dziennik zdarzeń w wierszach | Dużo więcej zdarzeń na ekranie, szukanie. | 08 |
-| [23](mod-recipes/23-panel-boczny.md) | Panel boczny ze zwijanymi sekcjami | Krótszy panel ustawień obiektu, „Usuń obiekt” oddzielone od reszty. | 08 (19 dla pozycji „Lista urządzeń”) |
-| [24](mod-recipes/24-pomieszczenia.md) | Pomieszczenia | Małe zdjęcia pomieszczeń i tabela urządzeń pomieszczenia. | 08, 19 |
-| [25](mod-recipes/25-grupy-panelu-bocznego.md) | Grupy panelu bocznego | Pozycje panelu pogrupowane według zadań, rzadko używane w zwiniętej grupie; „Monitoring” w Integracji, „Mój profil” w Użytkownikach. | 08, 23 (19 dla „Listy urządzeń”) |
-| [26](mod-recipes/26-sygnal-na-kafelkach.md) | Sygnał na kafelkach | Siła sygnału urządzeń radiowych i brak łączności widoczne od razu w pomieszczeniu. | 08 |
+| [01](mod-recipes/01-tsh-soft.md) | Edytor ekranów klawiatur dotykowych (**BETA**) | Ekrany klawiatur dotykowych INT-TSH2 i INT-TSG2 układa się w programie Satel TSH Soft, który działa tylko na Windows. Mod dodaje edytor tych ekranów do BE WAVE Soft: widzisz ekran klawiatury tak, jak będzie wyglądał, i myszą układasz na nim przyciski, napisy i ikony. Przygotowuje też zdjęcia na kartę pamięci klawiatury. | 07; edytor: 08 |
+| [02](mod-recipes/02-aktualizacje.md) | Bez aktualizacji z serwera Satel | Satel udostępnia aktualizacje tylko dla Windows. Program nie próbuje ich pobierać ani instalować; nowe wersje portu instalujesz sam. | — |
+| [03](mod-recipes/03-klucz-bazy-realm.md) | Dane programu nie znikają po restarcie | Na części Linuksów program po ponownym zalogowaniu do systemu nie umiał otworzyć swoich zapisanych danych i je kasował. Mod naprawia sposób przechowywania klucza do tych danych. | — |
+| [04](mod-recipes/04-wifi-linux.md) | Wi-Fi przy konfiguracji centrali na Linuksie | Przy dodawaniu centrali program przełącza komputer na sieć Wi-Fi centrali. Oryginał robił to poleceniami Windows; mod robi to poleceniami Linuksa. Na macOS ta funkcja nadal nie działa. | — |
+| [05](mod-recipes/05-zamykanie-aplikacji.md) | Poprawne zamykanie programu | Zamknięcie okna kończy program (na macOS wcześniej zostawał w Docku), a „Zakończ” nie pokazuje komunikatu o błędzie. | — |
+| [06](mod-recipes/06-natywne-moduly-i-binaria.md) | Części programu dla Linuksa i macOS | Oryginał zawiera wbudowane składniki tylko dla Windows (m.in. bazę danych i obsługę wideo z kamer). Mod podmienia je na wersje dla Linuksa i macOS; bez tego program nie startuje. | — |
+| [07](mod-recipes/07-budowanie-i-instalatory.md) | Budowanie programu i instalatora | Skrypty, które składają program i tworzą instalator dla Linuksa i macOS. Nowszy instalator aktualizuje program bez utraty danych. | 06 |
+| [08](mod-recipes/08-droga-desktopowa.md) | Osobny widok na komputer | Program Satel jest projektowany pod telefon. Mod dodaje przełącznik: w szerokim oknie (co najmniej 900 px) działają ulepszenia z modów 09–26, w wąskim program wygląda i działa jak oryginał. | — |
+| [09](mod-recipes/09-kroki-warunku-i-akcji-domyslne.md) | Lepsze wartości startowe w rutynach | Nowa akcja „Włącz/wyłącz” zaczyna od „Włącz”, a nowy warunek od „Stan wejścia”, czyli od tego, czego używa się najczęściej. Znika zbędny zielony komunikat. | 08 |
+| [10](mod-recipes/10-podsumowanie-warunkow-i-akcji.md) | Pełny opis warunków i akcji rutyny | Zamiast „Okno Sypialnia +3” widać nazwy wszystkich urządzeń i to, czy warunek dotyczy dowolnego z nich, czy wszystkich naraz. | 08 |
+| [11](mod-recipes/11-zamykanie-krokow-x-esc.md) | Zamknięcie okienka nie kasuje rutyny | Krzyżyk albo klawisz Esc w okienku warunku zamyka tylko to okienko. Wcześniej zamykał całą rutynę i niezapisane zmiany przepadały. | 08 |
+| [12](mod-recipes/12-listy-wyzwalaczy-i-akcji.md) | Krótkie listy wyzwalaczy i akcji | Cała lista mieści się na ekranie bez przewijania, pozycje można wybierać klawiaturą. | 08, 09 |
+| [13](mod-recipes/13-wybor-urzadzen.md) | Szybki wybór urządzeń | Przy wyborze urządzeń do rutyny pomieszczenia są zwinięte, wiersze mniejsze, a urządzenie można znaleźć, wpisując jego nazwę. | 08 |
+| [14](mod-recipes/14-wartosci-w-miejscu.md) | Mniej okienek przy ustawianiu rutyny | Wartość warunku i opcję akcji wybierasz od razu na liście, bez otwierania kolejnego okienka. | 08 |
+| [15](mod-recipes/15-jeden-ekran-z-panelem.md) | Rutyna na jednym ekranie | Rutyna jest widoczna cały czas, a warunek lub akcję edytujesz w panelu obok, zamiast w okienkach otwieranych jedno na drugim. | 08, 11, 12 |
+| [16](mod-recipes/16-zapis-rutyny.md) | Bezpieczny zapis rutyny | Jeden przycisk „Zapisz”, który mówi, czego brakuje; zapis także klawiszami Ctrl+Enter. Błąd zapisu nie zamyka rutyny, a program pyta o niezapisane zmiany. | 08, 12, 15 |
+| [17](mod-recipes/17-zwarty-ekran-rutyny.md) | Zwarty ekran rutyny | Mniejsze odstępy, więc cała rutyna mieści się na ekranie bez przewijania. | 08, 15 |
+| [18](mod-recipes/18-lista-rutyn-tabela.md) | Lista rutyn i scen jako tabela | Zamiast dużych kafelków tabela, w której od razu widać, co każda rutyna sprawdza i co robi. | 08 |
+| [19](mod-recipes/19-tabela-obiektow.md) | Tabela urządzeń | Wszystkie urządzenia w jednej tabeli z najważniejszymi danymi (np. typ wejścia, stan, sygnał), wejścia i wyjścia osobno, z wyszukiwaniem. Kliknięcie otwiera szczegóły. Tabela tylko pokazuje, niczym nie steruje. | 08 |
+| [20](mod-recipes/20-potwierdzenie-sterowania.md) | Pytanie przed poleceniem dla wielu urządzeń | „Włącz wszystko” i podobne przyciski, które sterują wieloma urządzeniami naraz, najpierw pytają o potwierdzenie. Pojedyncze wyjście włączasz od razu. | 08 |
+| [21](mod-recipes/21-tabela-awarii.md) | Tabela awarii | Aktywne awarie w zwartej tabeli, zamiast kilku dużych kart na ekran. | 08, 19 |
+| [22](mod-recipes/22-dziennik-zdarzen.md) | Czytelny dziennik zdarzeń | Zdarzenia w wierszach tabeli, więc na ekranie widać ich dużo więcej, z wyszukiwaniem. | 08 |
+| [23](mod-recipes/23-panel-boczny.md) | Uporządkowane menu ustawień | Menu ustawień obiektu po lewej ma zwijane sekcje, a „Usuń obiekt” jest oddzielone od reszty, żeby nie kliknąć go przypadkiem. | 08 (19 dla pozycji „Lista urządzeń”) |
+| [24](mod-recipes/24-pomieszczenia.md) | Pomieszczenia | Mniejsze zdjęcia pomieszczeń na ekranie głównym i tabela urządzeń dla każdego pomieszczenia. | 08, 19 |
+| [25](mod-recipes/25-grupy-panelu-bocznego.md) | Menu ustawień według zadań | Pozycje menu ułożone według tego, co się robi (konfiguracja, użytkownicy itd.), rzadko używane schowane. „Monitoring” jest w ekranie Integracja, „Mój profil” w ekranie Użytkownicy. | 08, 23 (19 dla „Listy urządzeń”) |
+| [26](mod-recipes/26-sygnal-na-kafelkach.md) | Siła sygnału na kafelkach urządzeń | W widoku pomieszczenia każde urządzenie bezprzewodowe pokazuje siłę sygnału, a urządzenie bez łączności jest na czerwono. | 08 |
 
 Pełny spis z numerami wpisów rejestru: [mod-recipes/README.md](mod-recipes/README.md). Historia zmian:
 [CHANGELOG.md](CHANGELOG.md).
