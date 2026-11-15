@@ -16,6 +16,27 @@ programu Satel: zawiera **przepisy na mody** i narzędzia, dzięki którym z ofi
 > **Edytor ekranów klawiatur TSH (mod 01) to wersja BETA.** Autor go sprawdził i działa poprawnie, ale nie jest
 > jeszcze dostatecznie przetestowany. Przed zapisem ekranów do klawiatury zrób kopię konfiguracji centrali.
 
+## Dlaczego to działa stabilnie
+
+Autor używa portu na co dzień, na Linuksie i macOS, i nie sprawia on problemów. To nie przypadek, tylko skutek tego,
+jak Satel zbudował swój program.
+
+BE WAVE Soft to aplikacja **Electron**. W uproszczeniu to strona internetowa zapakowana razem z własną przeglądarką:
+cały wygląd i logika programu są napisane w JavaScripcie, tak jak strony WWW, a do wyświetlania służy wbudowany silnik
+przeglądarki Chrome. Ten sam silnik istnieje w gotowych wersjach dla Windows, Linuksa i macOS. Dlatego kod programu
+Satel jest niezależny od systemu: na Windows i na Linuksie wykonuje się dokładnie ten sam JavaScript.
+
+Port nie przerabia więc programu w kodzie maszynowym ani go nie „łamie”. Robi trzy proste rzeczy:
+
+1. podmienia silnik z wersji dla Windows na wersję dla Linuksa albo macOS, tę samą, której używa Satel;
+2. podmienia kilka gotowych składników, które Satel dołączył tylko w wersji dla Windows, np. bazę danych i obsługę
+   wideo, na ich oficjalne wersje dla Linuksa i macOS;
+3. zmienia w czytelnym kodzie JavaScript kilka miejsc, które wołały polecenia Windows (np. łączenie z Wi-Fi) albo
+   program TSH Soft dostępny tylko dla Windows.
+
+Cała reszta, czyli komunikacja z centralą, logowanie i wszystkie ekrany, to niezmieniony kod Satel. Ulepszenia
+interfejsu z modów 08–26 są dodatkami w tym samym JavaScripcie i działają tylko w szerokim oknie.
+
 ## Dlaczego warto zbudować samemu
 
 Gotowe instalatory są w zakładce Releases, ale **zachęcamy, żeby zbudować aplikację samodzielnie**:
