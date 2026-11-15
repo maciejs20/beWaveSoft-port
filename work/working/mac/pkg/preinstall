@@ -1,0 +1,10 @@
+#!/bin/bash
+# Closes a running copy so its files can be replaced. User data in ~/Library stays untouched.
+pkill -TERM -x "BE WAVE Soft" 2>/dev/null || true
+sleep 3
+pkill -KILL -x "BE WAVE Soft" 2>/dev/null || true
+# A copy installed without this package has no receipt, so the installer would not clean up its old files.
+if ! pkgutil --pkg-info pl.satel.bewave.port >/dev/null 2>&1; then
+  rm -rf "/Applications/BE WAVE Soft.app"
+fi
+exit 0

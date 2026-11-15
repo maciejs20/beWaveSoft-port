@@ -1,0 +1,27 @@
+# Files published in the public repository (export-public.sh). One git pathspec per line, glob syntax;
+# a leading "!" excludes. Only tracked files are exported. Never list Satel's code: work/working/src holds
+# our own modules here only, everything else in src is Satel's deobfuscated application.
+README.md
+LICENSE
+CHANGELOG.md
+REJESTR-ZMIAN.md
+WYMAGANIA.md
+PORT-1.2.0-ANALIZA.md
+PROJEKT-*.md
+.gitignore
+mod-recipes/**
+docs/**
+work/README.md
+work/working/VERSION
+work/working/lib-version.sh
+work/working/linux/**
+work/working/mac/**
+work/working/tools/**
+work/working/test/**
+work/working/app/node_modules/node-window-manager/dist/**
+# our own source modules (new files; changes to Satel files are described in REJESTR-ZMIAN.md)
+work/working/src/main/entry.js
+work/working/src/main/linuxOverrides.js
+work/working/src/main/tshSdCard.js
+work/working/src/renderer/app/desktop/**
+work/working/src/renderer/app/logic/Desktop*.js

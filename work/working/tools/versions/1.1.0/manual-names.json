@@ -1,0 +1,89 @@
+{
+  "renderer/app/services/HubAuthService.js": {
+    "top": { "i": "_typeof", "r": "HubAuthServiceRef", "P": "HubAuthService", "Z": "lodash", "B": "callSuper", "D": "_runSignOutLogic", "F": "runSignOutLogic" },
+    "match": [
+      { "text": "key: \"init\"", "names": { "A": "ServiceBase", "e": "Self" } },
+      { "text": ".hubAccountService = n", "names": { "A": "storage", "t": "transport", "n": "hubAccountService", "i": "self" } },
+      { "text": "(signOutHandler) SignOut [silent", "names": { "e": "silent", "t": "caller", "n": "storage", "i": "transport" } }
+    ],
+    "methods": {
+      "getAccounts": { "A": "step", "e": "result", "t": "hubs", "n": "accounts" },
+      "getAccount": { "e": "account" },
+      "getOrCreateHub": { "e": "hubIdentifier", "t": "hubData", "n": "hub", "r": "savedHub" },
+      "autodiscovery": { "e": "timeoutOverride", "t": "timeoutMs", "n": "discoveredHubs", "i": "udp", "r": "responses", "a": "step", "l": "response", "u": "payload" },
+      "signUp": { "e": "hubIdentifier", "t": "login", "n": "password", "i": "createAccount", "r": "onSignedUp", "a": "deviceUuid", "l": "signUpCommand", "u": "error" },
+      "signIn": { "t": "request", "n": "currentAccount", "i": "savedAccount", "r": "hasFullCredentials", "a": "effectiveRequest", "l": "udp", "u": "signInResult", "s": "keepSession", "c": "discoveryError", "I": "error", "awaited": "isLocalNetwork" },
+      "signInWithAllFallback": { "e": "request", "t": "error" },
+      "updateHubAuth": { "e": "request", "t": "signInResult", "n": "created", "i": "hub", "r": "hubQuery", "awaited": "updatedCount" },
+      "signInRefreshToken": { "e": "needsRefresh", "t": "transportOption", "n": "self" },
+      "signInAutomatically": { "e": "hubs", "t": "account", "n": "success", "i": "error" },
+      "signInAutomaticallyAccount": { "e": "hubs", "t": "error" },
+      "switchAccount": { "e": "account", "t": "automatic", "n": "signInOption", "i": "silent", "r": "onError", "a": "request", "l": "error" },
+      "changeCredentials": { "e": "login", "t": "password", "n": "onNotify", "i": "onComplete", "r": "error", "a": "self" },
+      "changeKeypadCode": { "e": "keypadCode", "t": "error", "n": "self" },
+      "share": { "e": "shareRequest", "t": "response", "n": "payload", "i": "shareResponse", "r": "shareLink" },
+      "shareConfirm": { "e": "confirmation", "t": "sharing", "n": "request", "i": "credentials", "r": "deviceToken", "a": "deviceName", "l": "account" },
+      "shareResetPasswordConfirm": { "e": "confirmation", "t": "sharing", "n": "request", "i": "credentials", "r": "deviceToken", "a": "deviceName", "l": "account" },
+      "shareResetPassword": { "e": "login", "t": "response", "n": "command", "i": "payload", "r": "shareResponse" },
+      "signOut": { "e": "silent" },
+      "forgetPassword": { "e": "account", "t": "withoutPassword" },
+      "updateProfile": { "e": "mutateProfile", "t": "hub", "n": "account", "i": "hubUser" },
+      "handleSharing": { "e": "login", "t": "payload", "n": "hub", "i": "shareResponse" },
+      "loadSharing": { "e": "login", "t": "password", "n": "invitation", "i": "request", "r": "deviceToken", "a": "deviceName", "l": "credentials" },
+      "isStaleSessionError": { "A": "error", "i": "staleCodes", "r": "code", "o": "message" },
+      "isPermanentError": { "A": "error" }
+    }
+  },
+  "renderer/app/services/UdpService.js": {
+    "top": { "i": "_typeof", "r": "UdpServiceRef", "p": "lodash", "k": "UdpService" },
+    "methods": {
+      "ping": { "e": "hubId", "t": "timeouts", "n": "attempts", "i": "self" },
+      "connection": { "e": "hubId", "t": "payload", "n": "hostAndPort" },
+      "discover": { "e": "timeoutMs", "t": "responseLimit" },
+      "sendOnce": { "e": "hubId", "t": "timeoutMs", "n": "responseLimit", "i": "response", "r": "args" },
+      "sendMessage": { "e": "hubId", "t": "message", "n": "timeoutMs", "i": "responseLimit", "r": "sockets", "a": "closeSockets", "u": "error", "s": "self" }
+    },
+    "match": [
+      { "text": "UdpService: no local network interfaces available", "names": { "a": "resolve", "l": "reject", "u": "interfaces", "c": "encoded", "g": "answered", "C": "onMessage", "E": "targets", "R": "interfaceIterator", "M": "interfaceStep", "b": "openSocket", "j": "attempt", "S": "targetIterator", "v": "targetStep", "Z": "target", "k": "socket", "T": "broadcast", "O": "loopError", "V": "sendError" } },
+      { "text": "failed to decode response", "names": { "A": "datagram", "t": "chain", "n": "response", "r": "responseHubId" } },
+      { "text": "dgram.default.createSocket", "names": { "e": "networkInterface", "t": "socket", "n": "broadcast" } }
+    ]
+  },
+  "renderer/app/services/HubService.js": {
+    "top": { "j": "callSuper" },
+    "match": [
+      { "text": "key: \"knownHubs\"", "names": { "A": "ServiceBase", "e": "Self" } },
+      { "text": ".registration = t", "names": { "A": "auth", "t": "registration", "n": "events", "i": "structure", "r": "control", "o": "measurement", "l": "transport", "u": "monitoring", "s": "scene", "c": "storage", "I": "location", "g": "files", "d": "diagnostic", "C": "cameraService", "p": "biometry", "m": "nfcService", "y": "email", "f": "installerData", "h": "mqtt", "E": "self" } }
+    ],
+    "methods": {
+      "knownHubs": { "A": "hubStep", "e": "result", "t": "accounts", "n": "hubs", "map": "hubsById", "r": "hubIterator", "u": "entryIterator", "l": "entryStep", "c": "names" },
+      "unKnownHubs": { "e": "timeoutMs", "t": "hubs", "n": "names" },
+      "update": { "e": "displaySettings", "t": "interfaces", "n": "error", "awaited": "allInterfaces" }
+    }
+  },
+  "renderer/app/services/HubAccountService.js": {
+    "top": { "i": "HubAccountServiceRef", "p": "HubAccountService" },
+    "match": [
+      { "text": "key: \"loadCurrentAccount\"", "names": { "A": "Self" } },
+      { "text": "this.repository = e", "names": { "e": "repository" } }
+    ],
+    "methods": {
+      "get": { "e": "key" },
+      "getById": { "A": "id" },
+      "loadCurrentAccount": { "t": "accountId", "n": "account", "awaited": "storedId" },
+      "removeAccount": { "e": "account" },
+      "forgetPassword": { "e": "account" },
+      "find": { "A": "signInRequest", "e": "key", "t": "account" },
+      "signIn": { "t": "found", "n": "header", "i": "session" },
+      "upsert": { "t": "account", "n": "existing" },
+      "updateCredentials": { "e": "login", "t": "password" },
+      "updateAccountHubAlias": { "A": "account", "e": "alias" },
+      "deleteLocal": { "t": "login", "n": "hubIdentifier", "i": "accounts", "o": "step", "a": "account", "l": "error" },
+      "updateCurrent": { "e": "mutate" },
+      "update": { "A": "account", "e": "mutate" },
+      "updateAccountAuth": { "A": "account", "e": "auth" },
+      "setCurrentAccountId": { "e": "id" },
+      "isEqual": { "A": "left", "e": "right", "t": "sameText" }
+    }
+  }
+}

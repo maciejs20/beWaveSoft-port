@@ -1,0 +1,25 @@
+# source archives and logs
+*.zip
+*.log
+*.bac
+.DS_Store
+.TheUnarchiverTemp0/
+@eaDir/
+# original installers, app and builds (per original version: <ver>/)
+installers-original/
+work/original/
+work/working/build/
+work/working/tools/node_modules/
+work/working/app/node_modules/*
+!work/working/app/node_modules/node-window-manager/
+work/working/app/node_modules/node-window-manager/*
+!work/working/app/node_modules/node-window-manager/dist/
+# platform binaries, filled per mod-recipes/06 (sources in work/working/build/downloads)
+work/working/linux/natives/
+work/working/mac/natives/
+# generated, reproducible with work/working/tools/regenerate.sh
+work/deobfuscated/
+work/working/tools/test/last-output.js
+# TSH Soft reverse engineering workspace (Satel binaries, Ghidra project, samples)
+work/re-tsh/
+*.bac.*

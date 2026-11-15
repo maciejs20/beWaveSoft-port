@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+R="${DPKG_ROOT:-}"
+# Sets the sandbox helper setuid root, which Chromium requires.
+chown root:root "$R/opt/bewave-soft/chrome-sandbox" 2>/dev/null || true
+chmod 4755 "$R/opt/bewave-soft/chrome-sandbox" 2>/dev/null || true
+if [ -z "$R" ]; then
+  command -v update-desktop-database >/dev/null && update-desktop-database -q /usr/share/applications || true
+  command -v gtk-update-icon-cache >/dev/null && gtk-update-icon-cache -q /usr/share/icons/hicolor || true
+fi
+if [ "$1" = "configure" ] && [ -n "$2" ]; then
+  echo "BE WAVE Soft: zaktualizowano z $2. Dane i logowanie zostaly bez zmian. Uruchom aplikacje ponownie, jesli byla otwarta."
+fi
+exit 0

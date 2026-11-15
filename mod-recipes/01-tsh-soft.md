@@ -1,0 +1,87 @@
+# 01. TSH Soft wyłączony, edytor ekranów na desktopie
+
+- **Wpisy rejestru:** 001, 002, 035, 036, 037, 044, 045, 046, 047, 048, 049, 050, 051, 052, 053, 054
+- **Platformy:** Linux, macOS
+- **Wprowadzone:** 001, 002 w 1.1.0-port.1 (najpierw jako łatka na `dist`, od 1.1.0-port.2 w nazwanym kodzie); 035–037 w 1.2.0-port.2; 044–054 w [Unreleased] (przebudowa edytora, plan `docs/plans/2026-11-14-tsh-editor-redesign.md`)
+- **Wymagania:** decyzja użytkownika z 2026-10-30 (TSH Soft na stałe wyłączony, bez wine, binaria nie są dołączane); decyzja z 2026-11-13: port TSH jako edytor w BE WAVE (`PROJEKT-TSH-EDYTOR.md`, format danych w `PROJEKT-TSH.md`), wpisy 035–037; przebudowa edytora 2026-11-14, wpisy 044–054
+
+## Cel
+TSH Soft to program Satel tylko dla Windows (`TSH_soft.exe` w `resources/v*`), uruchamiany z ustawień klawiatury do edycji ekranów klawiatury. Na Linuksie i macOS nie ma go czym uruchomić. Aplikacja ma się zachowywać jak wersja mobilna: bez wejścia do TSH Soft i bez próby startu pliku `.exe`. Zamiast TSH Soft na drodze desktopowej działa wbudowany edytor ekranów klawiatury (INT-TSH2, INT-TSG2), który czyta i zapisuje te same dane ustawień klawiatury co TSH Soft i rysuje podgląd jak TSH Soft, z grafikami Satel wyciąganymi przy budowaniu z `TSH_soft.exe`.
+
+## Zachowanie
+- Ekran ustawień klawiatury (`KeypadSettingsScreen`, urządzenie typu klawiatura → ustawienia) **nie pokazuje** bloku, który w oryginale jest tylko na webie (`PlatformConstants.isWeb`):
+  - przycisku „Edytuj ekrany” (`device.keypad_settings.edit_screens`; po włosku literał `"Modifica schermi"`),
+  - odnośnika „Przywróć ustawienia fabryczne” (`hub-configuration.restore_to_factory_settings`) z pytaniem `hub-configuration.restore_to_factory_settings_confirmation` i przyciskami `cancel` / `yes`.
+- Reszta ekranu (język domyślny, siatka ekranów `keypadSettings.screens`) bez zmian, tak jak na telefonie.
+- Proces główny: wywołanie IPC `open-resource` z plikiem o rozszerzeniu `.exe` (wielkość liter bez znaczenia) **niczego nie uruchamia**, zwraca `undefined` i zapisuje w `main.log` ostrzeżenie `TSH Soft is not available: <nazwa>`. Inne pliki (`shell.openPath`) działają jak dawniej.
+- Binaria TSH (`resources/v*`) nie trafiają do buildów Linux i macOS.
+- Blokada `.exe` i brak binariów nie zależą od szerokości okna: dotyczą całej aplikacji desktopowej na obu platformach.
+
+### Edytor ekranów na drodze desktopowej (wpisy 035–037, 044–054)
+- Przy `DesktopEditor.isDesktopEditor()` (okno ≥ 900 px) ekran ustawień klawiatury pokazuje z powrotem przycisk „Edytuj ekrany” (ten sam tytuł i styl, po włosku „Modifica schermi”). Odnośnik przywracania ustawień fabrycznych zostaje ukryty. Poniżej 900 px, na telefonie i tablecie: jak wyżej, bez przycisku.
+- Przycisk otwiera trasę `ScreenName.TshEditor` (modal na całą szerokość) z parametrami `{ input, onSave }`: `input` to obiekt, który dawniej szedł do `saveTshSettings` (`buildTshSettingsInput`, jedna funkcja dla obu dróg), `onSave(content)` woła handler pliku `tsh-settings.json` (ten zarejestrowany pierwszym argumentem `addListenerTshSettings(`, w 1.2.0 `YA`) z `{ content }`. Plik i watcher nie są w tej drodze używane.
+- Edytor (katalog `desktop/tshEditor/`): po lewej ekrany (wpis 050: miniatury, grupy, „Ekran n (bez nazwy)” dla nazw bez widocznego znaku; dodawanie, usuwanie i zmiana kolejności w obrębie typu) i warstwy pokazanego ekranu (glif i treść widżetu z `tshWidgetLabel.js`, zmiana kolejności rysowania `reorderWidget`, usuwanie z pytaniem); w środku podgląd (`TshCanvas` nad `TshScreenRender`, wpisy 036 i 047); po prawej inspektor (wpis 051, `TshInspector`: zakładki Ekran/Widżet za zaznaczeniem, sekcje zwijane z pamięcią w `localStorage`, przewijanie, „Usuń widżet”): właściwości ekranu (nazwa z licznikiem bajtów, typ, ekran główny, „Używaj motywu”, siatka, kolory), motyw z `themes.json` (id 255 − pozycja na liście), opcje wygaszacza (bez zegara, bez wygaszacza), właściwości widżetu generowane z tabeli `tshWidgetTypes.js`: wszystkie pola danych, ikony wybierane z siatki glifów `WDGT` (`TshIconPicker`: tylko ikony firmware, najpierw użyte w układzie, klawiatura), cztery ikony i kolory stanów czuwania, źródła danych z wejścia (urządzenia według `has_input`/`has_on_off`/`dev_values`, sceny, tryby czuwania, pomieszczenia, ekrany dodatkowe i „Powrót”). Typ 0x15 tylko zachowywany; bity 0–1 „Stan” czuwania ukryte.
+- Podgląd (wpis 036):
+  - Ekran w skali dopasowanej do środkowej kolumny z zachowaniem proporcji (1024×600 albo 480×272), rysowany w pikselach klawiatury jak w TSH Soft: tło motywu (obraz z `/tsh/bg/` albo kolor cl3) albo własne kolory ekranu bez motywu, siatka 5×2 przy bicie 0x10, pasek stanu z nazwą ekranu i zegarem, kropki stron ekranów użytkownika, zegar wygaszacza.
+  - Widżety z ikoną `WDGT` albo tekstem Roboto Light w rozmiarze 0–2, ze środkowaniem (X środka jak w TSH) i kolorami motywu albo własnymi. Nieobsługiwane widżety jako kreskowane prostokąty, bez przesuwania. Włączenie „Do środka” przesuwa X o pół szerokości, jak TSH.
+  - Rozmiary z tabeli TSH Soft dla każdego modelu (`tshMetrics.js`, wpis 044, `PROJEKT-TSH.md` 2.6), układ w `tshLayout.js`.
+  - Rysowanie jak TSH (wpis 045): duży tekst Roboto Thin, wyrównanie z bitów 2–3 bajtu 7 tylko dla tekstów, ikony spoza firmware jako 0x22, wskaźniki z warstw glifów, ikony paska stanu tylko na INT-TSH2 (każdy ekran z paskiem i wyśrodkowane na wygaszaczu), kropki stron glifami 0x1f6/0x1f7, zegar wygaszacza z dwukropkiem Light połowy wielkości.
+  - Data/czas jak w TSH (wpis 046, `tshDateFormat.js`): zamiany TSH (małe `m` to minuty), tokeny Delphi, nazwy po polsku albo angielsku według `lang` wejścia, polski miesiąc w dopełniaczu.
+- Zaznaczanie i przeciąganie (wpisy 047, 052, `tshPointer.js`):
+  - Kliknięcie zaznacza widżet pod kursorem i niczego nie przesuwa: wnętrze prostokąta ustępuje innemu widżetowi pod kursorem, Alt+klik albo Shift+klik wybiera kolejny widżet pod kursorem, pusty tekst ma ramkę trafienia co najmniej 8 px CSS.
+  - Scena bierze wskaźnik już przy wciśnięciu, więc puszczenie poza nią kończy wciśnięcie; zmiana ekranu albo modelu przerywa wciśnięcie i przeciąganie bez zapisu.
+  - Przeciąganie zaczyna się po 4 px CSS ruchu i zapisuje jedno przesunięcie przy puszczeniu. Z siatką edytora (G przełącza ją dla pokazanego ekranu, start z flagą siatki ekranu, niezapisywana) przyciąga krawędzie i środek ramki do pól, krawędzi i środka ekranu w promieniu 6 px CSS; Alt wstrzymuje przyciąganie. Esc przerywa przeciąganie albo odznacza.
+  - Strzałki przesuwają o 1 px, z Shift o 8 px. W ekranie trzymana jest tylko kotwica X/Y, ramka może wystawać poza ekran.
+- Historia i klawiatura (wpisy 048, 053, 054, `tshHistory.js`, `tshAsk.js`):
+  - Ctrl/Cmd+Z cofa, Ctrl/Cmd+Shift+Z i Ctrl/Cmd+Y ponawiają (100 kroków; wpisywanie w jedno pole i przytrzymana strzałka w ciągu 1 s to jeden krok). Delete i Backspace usuwają zaznaczony widżet po pytaniu, Tab i Shift+Tab przechodzą po widżetach. W polach formularza i w okienkach (menu, wybór ikon) klawisze zostają w nich.
+  - Pytania idą przez `tshAsk.js`: Esc odpowiada „nie” i nie dochodzi do `Page`, skróty czekają na odpowiedź i na koniec przeciągania. Pytanie zastąpione innym oknem (np. pytaniem o zamknięcie) uznaje się za „nie”, gdy karta z etykietą „<tytuł>. <treść>” znika. Usunięcie działa tylko na stanie z chwili pytania.
+  - Po cofnięciu lub ponowieniu zaznaczenie idzie za widżetem (zmiana kolejności; szukanie po treści tylko, gdy miejsce zajął widżet spod innego indeksu, najbliższe dopasowanie, więc identyczna kopia nie przejmuje zaznaczenia).
+  - Klawisze przycisków i menu wierszy list zostają w nich, Esc w polu inspektora zdejmuje z niego fokus. Esc bez niczego do anulowania dalej zamyka edytor jak w oryginale. Pytanie o niezapisane zmiany, gdy stan różni się od wczytanego.
+- Karta microSD (wpis 037): przycisk „Karta SD” obok „Anuluj” otwiera okno pokazu slajdów jak `TFormSD` w TSH Soft: Dodaj (JPG, BMP, PNG; obraz od razu dopasowany do ekranu klawiatury regułą TSH: bez powiększania, do szerokości ekranu, wyśrodkowany, czarne pasy, obcięta góra i dół), Usuń, Wyczyść, W lewo/W prawo, licznik, folder karty i „Zapisz na kartę SD”: `photo/img1.jpg`, `img2.jpg`… (JPEG baseline, jakość 90, tylko JFIF) oraz tła z tej sesji w `map/`. Gdy `photo/` ma już obrazy, okno pyta, czy usunąć stare `img*.jpg`; bez usuwania nowe dostają kolejne wolne numery jak w TSH. Ostrzeżenie: pliki trzeba samemu skopiować na kartę.
+- Tło ekranu (wpis 037): przy wyłączonym „Używaj motywu” pole „Obraz”: „Bez obrazu”, tła wbudowane `int://<nazwa>.jpg`, bieżący plik z karty, „Z pliku…”. „Z pliku…” pokazuje ostrzeżenie TSH o karcie, okno pliku i „Kadrowanie” (prostokąt o proporcjach ekranu, przesuwany myszą, róg prawy dolny zmienia rozmiar). OK zapisuje `map/map<id ekranu>.jpg` w rozdzielczości klawiatury do folderu karty (wybieranego za pierwszym razem), wpisuje tę nazwę w pole obrazu ekranu i pokazuje tło w podglądzie. Plik z karty spoza tej sesji podgląd zastępuje kolorem cl3 z napisem.
+- Pliki zapisuje proces główny (`src/main/tshSdCard.js`, kanały `tsh-sd-choose-folder`, `tsh-sd-list`, `tsh-sd-write`, `tsh-sd-remove`, w preload `tshSd*`) tylko w folderze wybranym w tej sesji i tylko `photo/img<N>.jpg` i `map/map<N>.jpg`; nic nie idzie przez centralę.
+- Układ (wpis 049, `TshEditorShell`, `TshToolbar`): ramka na całą treść okna, bez stopki `Page`; pasek narzędzi z modelem i rozdzielczością, cofnij/ponów, siatką edytora, powiększeniem (dopasowanie domyślnie, 50–400 %, Ctrl/Cmd+kółko wokół kursora, Ctrl/Cmd+0, 1, =, −), „Karta SD”, licznikiem danych („N / 65 535 B”, pasek żółty od 90 %, czerwony ponad limit albo przy błędach), listą skrótów, „Anuluj” i „Zapisz” z plakietką błędów (lista, kliknięcie zaznacza ekran i widżet) albo uwag. Panele: lewy 264 px, podgląd na resztę (min. 360 px, przewija się przy powiększeniu), prawy 320 px (280 px poniżej 1200 px); każdy przewija się osobno. „Zapisz” jest nieaktywny przy błędach. Przy zmienionych lub ponownie użytych numerach ekranów pyta przed zapisem, bo uprawnienia użytkowników z centrali idą za numerem.
+- Brak bloku w wejściu: blok świeżego zapisu TSH dla modelu (TSH2 1024×600, TSG2 480×272). Blok nieczytelny albo o rozdzielczości innej niż model: komunikat i przycisk „Utwórz nowe ekrany”. Model inny niż TSH2/TSG2: tylko komunikat.
+
+## Punkty zaczepienia
+- Edytor, w ekranie ustawień klawiatury (`KeypadSettingsScreen`): wywołanie `window.electronAPI.addListenerTshSettings(` (rejestruje dwa handlery: pliku `tsh-settings.json` i zamknięcia TSH Soft; w 1.2.0 nazwane lokalnie `YA` i `NA`, handler pliku zaczyna się od `var e = A.content;`), wywołanie `window.electronAPI.saveTshSettings(JSON.stringify(...))` z obiektem TSH, `FormGroup` z kluczem i18n `device.keypad_settings.default_language`; trasa `KeypadSettingsScreen` w rejestrze tras (w 1.2.0 plik `misc/module_2541.js`).
+- Renderer: klucz `device.keypad_settings.edit_screens` (w 1.2.0: 1 trafienie w `bundle.web.js`), literał `"Modifica schermi"` (1 trafienie), `hub-configuration.restore_to_factory_settings_confirmation`. Ekran eksportowany jako `KeypadSettingsScreen` (w 1.1.0 moduł 1810).
+- Proces główny (`dist/electron.main.js`): `ipcMain.handle("open-resource"` (w 1.2.0: 1 trafienie), warunek `path.extname(...).toLowerCase() === ".exe"`, zmienne `childProcessHandle` i `tshSettingsPath`, kanały `close-resource`, `save-tsh-settings`. Karta microSD (037): handler `ipcMain.handle("clear-tsh-settings"` w `main.js`, metoda `clearTshSettings` w `preload.js`.
+
+## Implementacja
+0. **Edytor (035–037):** skopiuj `desktop/tshEditor/` i `src/main/tshSdCard.js` bez zmian, w `main.js` za handlerem `clear-tsh-settings` dodaj `require("./tshSdCard").registerTshSdHandlers(ipcMain, dialog, () => mainWindow)`, w `preload.js` za `clearTshSettings` metody `tshSdChooseFolder`, `tshSdList`, `tshSdWrite`, `tshSdRemove`, w `KeypadSettingsScreen` zamień budowę obiektu TSH na `tshInput()` i dodaj przycisk `isDesktopEditor()` z `onPress={openTshEditor}`, dodaj `ScreenName.TshEditor` i trasę obok `KeypadSettingsScreen`, blok `tsh_editor` w `i18n/pl.js` i `i18n/en.js` (dokładny kod we wpisach 035–037). Punkt 1 niżej dotyczy wtedy tylko drogi mobilnej i odnośnika ustawień fabrycznych.
+1. **Renderer, `KeypadSettingsScreen`:** usuń całe wyrażenie JSX `{PlatformConstants.isWeb && <View …>…</View>}`, które zawiera kotwicę `edit_screens`. Blok zaczyna się po `FormGroup` z językiem domyślnym (`device.keypad_settings.default_language`) i kończy przed `{values.keypadSettings?.screens && <WrapContainer …`. Funkcje wywoływane z bloku (otwarcie TSH, przywrócenie ustawień) zostają w pliku jako martwy kod, nie trzeba ich ruszać.
+2. **Proces główny, handler `open-resource`:** po obliczeniu ścieżki zasobu (po drugim `console.log`), przed oryginalnym `if (path.extname(r).toLowerCase() === ".exe") { if (childProcessHandle) …`, dodaj wczesny powrót:
+   ```js
+   if (path.extname(r).toLowerCase() === ".exe") {
+     log.warn("TSH Soft is not available:", r);
+     return;
+   }
+   ```
+   Oryginalny warunek zostaje niżej jako nieosiągalny. Bez `process.platform`, bo aplikacja działa tylko na Linuksie i macOS.
+3. **Budowanie:** skrypty budowania (przepis 07) nie kopiują katalogów `resources/v*` z buildu Windows. Build Linux i macOS biorą `resources` z paczki Electrona, a z oryginału tylko pliki z listy `BW_ORIGINAL_RESOURCES` (w 1.2.0 `splash.jpg`).
+
+Decyzja odrzucona i niewracająca: uruchamianie przez wine.
+
+## Zależności
+- 08: edytor działa tylko na drodze desktopowej (`DesktopEditor.isDesktopEditor()`).
+- 07, wpis 034: build wyciąga grafiki, czcionki i motywy z `TSH_soft.exe` oryginału do `dist/tsh`; bez dokładnie jednego `resources/v*/TSH_soft.exe` w rozpakowanym buildzie Windows build się przerywa. Przepis 07 dba też, by binaria TSH nie trafiły do paczek.
+- Blokada `.exe` (001, 002) nie zależy od niczego.
+
+## Sprawdzenie
+0. Okno ≥ 900 px: „Edytuj ekrany” jest i otwiera edytor; < 900 px przycisku nie ma. W edytorze dodanie ekranu i „Zapisz” wraca do ustawień klawiatury z nowym ekranem na siatce; „Anuluj” po zmianie pyta o wyjście. `npm --prefix tools test` przechodzi.
+1. Ustawienia klawiatury: brak przycisku „Edytuj ekrany” i odnośnika przywracania ustawień fabrycznych, reszta formularza działa.
+2. W DevTools: `window.electronAPI.openResource("x/TSH_soft.exe")` (preload opakowuje to w `{ fileName }`) niczego nie uruchamia, a w `~/.config/BE WAVE Soft/logs/main.log` (macOS: `~/Library/Logs/BE WAVE Soft/main.log`) jest `TSH Soft is not available`.
+3. `asar list` paczki nie zawiera `TSH_soft.exe`.
+4. Przebudowany edytor (044–054). Wszystkie polecenia z katalogu głównego repozytorium.
+   - Testy jednostkowe: `npm --prefix work/working/tools test` (wszystkie przechodzą); pokrycie: `node --test --experimental-test-coverage` na plikach z `work/working/test`.
+   - Kontrole w aplikacji: zbuduj aplikację (przepis 07), uruchom ją na izolowanym `HOME` z `--remote-debugging-port`, wstrzyknij harness `work/working/tools/tsh-preview-harness.js` (zbudowany z bieżącego `work/working/src`) i przez CDP sprawdź dla INT-TSH2 i INT-TSG2: brak przewijania strony przy 1000×800, 1440×900, 1920×1080, 1000×600 i 980×700, pasek narzędzi, listy ekranów i warstw, inspektor i wybór ikon, przeciąganie, przyciąganie i trafianie, historię i skróty (także pytanie zastąpione innym oknem), DPR 2.
+   - Wierność podglądu: `node work/working/tools/tsh-preview-compare.mjs <ws-url> work/working/tools/tsh-compare-cases.json <katalog wyniku>`. Narzędzie potrzebuje zrzutów podglądu i próbek z TSH Soft w `work/re-tsh/shots` i `work/re-tsh/samples` (materiał Satel, poza repozytorium; trzeba je zrobić samemu w TSH Soft na Windows), bez nich kończy się kodem 2.
+   - Okno < 900 px: przycisku „Edytuj ekrany” nie ma. Przebudowa zmienia tylko `desktop/tshEditor/*` i `i18n/{pl,en}.js`, nie `KeypadSettingsScreen`.
+   - Wyniki liczbowe kontroli wydania są w `CHANGELOG.md` ([Unreleased]).
+
+## Ryzyka przy nowej wersji
+- W nowym wydaniu blok może mieć inną strukturę (np. inne napisy lub osobny komponent). Szukaj po kluczu `edit_screens` i usuwaj cały warunek `isWeb`, w którym leży.
+- Jeśli Satel doda inne wejścia do TSH (np. w ustawieniach centrali), też trzeba je ukryć. Szukaj wywołań `openResource` / `open-resource` w rendererze i ścieżek `resources/v`.
+- Przebudowa edytora (044–054) leży w całości w `desktop/tshEditor/` i i18n, więc nowy plik `KeypadSettingsScreen` wymaga tylko zachowania przycisku (przepis wyżej, punkt 0). Tabela rozmiarów TSH (`tshMetrics.js`) pochodzi z `TSH_soft.exe` 1.2.0 (`FUN_00ab0cd4`): przy nowej wersji TSH Soft porównać ją z exe i uruchomić narzędzie porównania. Nieobjęte kontrolą: macOS, dotyk, powiększenie strony ≠ 100 %, ciemny motyw, zapis na prawdziwą klawiaturę (`PROJEKT-TSH-EDYTOR.md`, „Otwarte [P] po przebudowie”).
+- `electron.main.js` w 1.2.0 ma 10 wystąpień `.exe`: sprawdź, czy któreś nie jest nowym miejscem startu procesu (np. `spawn` poza `open-resource`).

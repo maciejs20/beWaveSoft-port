@@ -1,0 +1,7 @@
+#!/bin/sh
+# The Chromium sandbox needs a setuid helper; installs that cannot have it fall back to running without.
+DIR=/opt/bewave-soft
+if [ -u "$DIR/chrome-sandbox" ]; then
+  exec "$DIR/bewave-soft" "$@"
+fi
+exec "$DIR/bewave-soft" --no-sandbox "$@"

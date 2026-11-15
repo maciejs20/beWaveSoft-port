@@ -1,0 +1,643 @@
+{
+  "comment": "Cases of tools/tsh-preview-compare.mjs: TSH Soft shot (work/re-tsh/shots), sample (work/re-tsh/samples), record index, the shot's clock time and regions in keypad pixels [left, top, width, height]. Ink = a channel differing from the background color by at least the threshold. Regions over the darkest corner of the Abstract picture (bar.icons) use a higher threshold.",
+  "tolerance": {
+    "edge": 2,
+    "sizePct": 3
+  },
+  "background": [235, 235, 235],
+  "threshold": 70,
+  "notVerified": [
+    "page dots (white glyphs on a light background are not separable from the theme picture)",
+    "TSG2: text sizes 1-2, icons, indicators, rectangle, screensaver (no TSG2 shots)",
+    "TSH2: text size 1, icon and indicator sizes 1-2 (no shots)",
+    "status bar of additional screens (no shot)"
+  ],
+  "cases": [
+    {
+      "name": "tsh2-e2",
+      "shot": "e2.png",
+      "sample": "042",
+      "record": 3,
+      "time": "2026-11-13T13:50:35",
+      "regions": [
+        {
+          "label": "room indicator",
+          "rect": [290, 190, 60, 60]
+        },
+        {
+          "label": "alarm clear icon",
+          "rect": [590, 340, 100, 100]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e3",
+      "shot": "e3.png",
+      "sample": "042",
+      "record": 4,
+      "time": "2026-11-13T13:50:37",
+      "regions": [
+        {
+          "label": "input indicator",
+          "rect": [290, 190, 60, 60]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e4",
+      "shot": "e4.png",
+      "sample": "042",
+      "record": 5,
+      "time": "2026-11-13T13:50:39",
+      "regions": [
+        {
+          "label": "output indicator",
+          "rect": [290, 190, 60, 60]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e5",
+      "shot": "e5.png",
+      "sample": "042",
+      "record": 6,
+      "time": "2026-11-13T13:50:41",
+      "regions": [
+        {
+          "label": "date",
+          "rect": [290, 190, 250, 40]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e6",
+      "shot": "e6.png",
+      "sample": "042",
+      "record": 7,
+      "time": "2026-11-13T13:50:43",
+      "regions": [
+        {
+          "label": "control icon",
+          "rect": [290, 190, 110, 110]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e7",
+      "shot": "e7.png",
+      "sample": "042",
+      "record": 8,
+      "time": "2026-11-13T13:50:45",
+      "regions": [
+        {
+          "label": "rectangle",
+          "rect": [290, 190, 280, 50]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e8",
+      "shot": "e8.png",
+      "sample": "042",
+      "record": 9,
+      "time": "2026-11-13T13:50:47",
+      "regions": [
+        {
+          "label": "panic icon",
+          "rect": [290, 190, 110, 110]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e9",
+      "shot": "e9.png",
+      "sample": "042",
+      "record": 10,
+      "time": "2026-11-13T13:50:49",
+      "regions": [
+        {
+          "label": "info icon",
+          "rect": [290, 190, 110, 110]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e10",
+      "shot": "e10.png",
+      "sample": "042",
+      "record": 11,
+      "time": "2026-11-13T13:50:51",
+      "regions": [
+        {
+          "label": "link icon",
+          "rect": [290, 190, 110, 110]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e11",
+      "shot": "e11.png",
+      "sample": "042",
+      "record": 12,
+      "time": "2026-11-13T13:50:53",
+      "regions": [
+        {
+          "label": "button icon",
+          "rect": [290, 190, 110, 110]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-e12",
+      "shot": "e12.png",
+      "sample": "042",
+      "record": 13,
+      "time": "2026-11-13T13:50:55",
+      "regions": [
+        {
+          "label": "value",
+          "rect": [290, 190, 100, 40]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-large-text",
+      "shot": "s_s1_czuwanie36_tryb_+1.png",
+      "sample": "058",
+      "record": 2,
+      "time": "2026-11-13T13:55:18",
+      "regions": [
+        {
+          "label": "large text",
+          "rect": [290, 190, 600, 90]
+        },
+        {
+          "label": "arm toggle icon",
+          "rect": [590, 340, 100, 100]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-centered-date",
+      "shot": "s_s5_Data_align_srodek.png",
+      "sample": "049",
+      "record": 6,
+      "time": "2026-11-13T13:51:54",
+      "regions": [
+        {
+          "label": "centered date",
+          "rect": [280, 190, 260, 40]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-rect-border3",
+      "shot": "s_s7_Prostokat_width+_grubosc+.png",
+      "sample": "051",
+      "record": 8,
+      "time": "2026-11-13T13:52:15",
+      "regions": [
+        {
+          "label": "rectangle",
+          "rect": [290, 190, 280, 50]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-value-2dec",
+      "shot": "s_s12_Wartosc_decimals_1->2_only.png",
+      "sample": "087",
+      "record": 13,
+      "time": "2026-11-13T14:59:02",
+      "regions": [
+        {
+          "label": "value",
+          "rect": [290, 190, 100, 40]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-grid-main",
+      "shot": "now.png",
+      "sample": "063",
+      "record": 2,
+      "time": "2026-11-13T14:22:23",
+      "regions": [
+        {
+          "label": "large Polish text start",
+          "rect": [295, 195, 110, 80]
+        },
+        {
+          "label": "grid vertical line",
+          "rect": [400, 80, 20, 100]
+        },
+        {
+          "label": "grid horizontal line",
+          "rect": [30, 316, 150, 20]
+        },
+        {
+          "label": "arm toggle icon",
+          "rect": [590, 340, 100, 100]
+        },
+        {
+          "label": "bar.icons",
+          "rect": [0, 0, 240, 50],
+          "threshold": 100
+        },
+        {
+          "label": "bar.name",
+          "rect": [380, 0, 264, 48]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [790, 0, 160, 48]
+        },
+        {
+          "label": "bar.user",
+          "rect": [955, 0, 69, 48]
+        },
+        {
+          "label": "bar.line",
+          "rect": [100, 44, 200, 16]
+        }
+      ]
+    },
+    {
+      "name": "tsh2-saver",
+      "shot": "saver.png",
+      "sample": "058",
+      "record": 1,
+      "time": "2026-11-13T13:55:58",
+      "regions": [
+        {
+          "label": "saver hours",
+          "rect": [200, 140, 300, 230]
+        },
+        {
+          "label": "saver colon",
+          "rect": [495, 200, 40, 110]
+        },
+        {
+          "label": "saver minutes",
+          "rect": [530, 140, 290, 230]
+        },
+        {
+          "label": "saver seconds",
+          "rect": [840, 260, 110, 90]
+        },
+        {
+          "label": "saver status icons",
+          "rect": [380, 0, 264, 50]
+        }
+      ]
+    },
+    {
+      "name": "tsg2-text",
+      "shot": "tsg_scr.png",
+      "sample": "084",
+      "record": 2,
+      "time": "2026-11-13T14:08:20",
+      "regions": [
+        {
+          "label": "small text",
+          "rect": [95, 95, 140, 25]
+        },
+        {
+          "label": "bar.icons (none on TSG2)",
+          "rect": [0, 0, 120, 24]
+        },
+        {
+          "label": "bar.name",
+          "rect": [180, 0, 120, 24]
+        },
+        {
+          "label": "bar.clock",
+          "rect": [360, 0, 82, 24]
+        },
+        {
+          "label": "bar.user",
+          "rect": [445, 0, 35, 24]
+        },
+        {
+          "label": "bar.line",
+          "rect": [50, 20, 100, 12]
+        }
+      ]
+    }
+  ]
+}

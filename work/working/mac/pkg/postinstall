@@ -1,0 +1,10 @@
+#!/bin/bash
+# Signs the installed app ad hoc, because arm64 macOS refuses to run unsigned code.
+set -e
+APP="/Applications/BE WAVE Soft.app"
+xattr -cr "$APP"
+find "$APP/Contents/Resources" -type f \( -name '*.node' -o -name 'ffmpeg.exe' \) | while read -r f; do
+  if file "$f" | grep -q Mach-O; then codesign --force --sign - "$f"; fi
+done
+codesign --force --deep --sign - "$APP"
+exit 0

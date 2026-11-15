@@ -1,0 +1,11 @@
+{
+ "8": "lib/@babel/runtime/regenerator",
+ "25": "lib/@babel/runtime/helpers/toConsumableArray",
+ "15": "lib/@babel/runtime/helpers/slicedToArray",
+ "1820": "lib/react/react",
+ "1890": "lib/react/jsx-runtime",
+ "30": "app/services/Logger",
+ "35": "app/logic/HubLimits",
+ "12": "app/logic/PlatformConstants",
+ "416": "app/services/HubAuthService"
+}

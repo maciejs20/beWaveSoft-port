@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>BE WAVE Soft</string>
+	<key>CFBundleExecutable</key>
+	<string>BE WAVE Soft</string>
+	<key>CFBundleIconFile</key>
+	<string>bewave.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>pl.satel.bewave</string>
+	<key>CFBundleName</key>
+	<string>BE WAVE Soft</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@ORIGINAL_VERSION@</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>BE WAVE</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bewave</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>@ORIGINAL_VERSION@</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>BE WAVE Soft łączy się z centralą i kamerami w sieci lokalnej.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Lokalizacja jest potrzebna do odczytu sieci Wi-Fi.</string>
+</dict>
+</plist>

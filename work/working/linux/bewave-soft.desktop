@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=BE WAVE Soft
+Comment=BE WAVE smart home control
+Exec=/usr/bin/bewave-soft %U
+Icon=bewave-soft
+Type=Application
+Terminal=false
+Categories=Utility;
+MimeType=x-scheme-handler/bewave;
+StartupWMClass=bewave
