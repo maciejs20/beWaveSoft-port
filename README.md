@@ -184,9 +184,10 @@ zobaczyć go w pełnym rozmiarze.
 Opis dotyczy oryginału Satel **1.2.0**, na którym oparte są przepisy. Autor budował na Linuksie (Ubuntu/Debian) i tam
 powstaje też paczka dla macOS. Budowania na Macu nie sprawdzano.
 
-**Czas i koszt.** Przygotowanie komputera i odtworzenie kodu to krótka część pracy. Najdłużej trwa nanoszenie modów:
-przy wszystkich 26 to wiele godzin pracy agenta w kilku sesjach. Kosztu autor nie mierzył; zależy od agenta i planu
-(abonament ma limity zużycia, klucz API to opłata za zużycie). Na początek możesz wziąć samą podstawę 01–07.
+**Czas i koszt.** Przeniesienie wszystkich modów z wersji Satel 1.1.0 na 1.2.0 zajęło autorowi z agentem
+(Claude Code) około godziny na same mody, a półtorej godziny razem z przygotowaniem narzędzi, w jednej sesji. Budowy
+od zera według przepisów nikt jeszcze nie mierzył; licz się z podobnym albo trochę dłuższym czasem. Kosztu autor nie
+mierzył; zależy od agenta i planu (abonament ma limity zużycia, klucz API to opłata za zużycie).
 
 ### Krok 1. Przygotuj komputer
 
