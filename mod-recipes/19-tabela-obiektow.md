@@ -1,9 +1,9 @@
-# 19. Tabela obiektów i pozycja „Lista obiektów”
+# 19. Tabela obiektów i pozycja „Lista urządzeń”
 
-- **Wpisy rejestru:** 024, 025, 055, 056, 057
+- **Wpisy rejestru:** 024, 025, 055, 056, 057, 059, 060, 061
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** 1.1.0-port.2 (commity `008d0f2`, `0466b30`, `48f2c2f`); 055–057 niewydane (po 1.2.0-port.2), oryginał 1.2.0
-- **Wymagania:** 10; projekt `PROJEKT-TABELA-OBIEKTOW.md` (decyzje: czujki bezprzewodowe w „Pozostałe”, szczegóły bez potwierdzenia, `Esc` w szczegółach wraca do tabeli, domyślnie widok graficzny); decyzje użytkownika z 2026-11-15 (wpis 056: kolumny Moduł i Wartość, filtr typów, bez numeru systemowego modułu; wpis 057: X w szczegółach wraca do tabeli)
+- **Wprowadzone:** 1.1.0-port.2 (commity `008d0f2`, `0466b30`, `48f2c2f`); 055–057 i 059–061 w 1.2.0-mod3.1, oryginał 1.2.0
+- **Wymagania:** 10; projekt `PROJEKT-TABELA-OBIEKTOW.md` (decyzje: czujki bezprzewodowe w „Pozostałe”, szczegóły bez potwierdzenia, `Esc` w szczegółach wraca do tabeli, domyślnie widok graficzny); decyzje użytkownika z 2026-11-15 (wpis 056: kolumny Moduł i Wartość, filtr typów, bez numeru systemowego modułu; wpis 057: X w szczegółach wraca do tabeli; wpisy 059–061 po teście na centrali: Moduł za Pomieszczeniem, szerokości kolumn według treści i zmieniane myszą, nazwa „Lista urządzeń”)
 
 ## Cel
 Lista urządzeń (ekran główny → kafelek grupy, np. „WSZYSTKIE”) jest zrobiona pod telefon: duże karty, a parametry takie jak typ obwodu wejścia widać dopiero w szczegółach. Potrzebna jest dodatkowa, tabelaryczna wersja z kluczowymi parametrami, wejściami i wyjściami osobno, szukaniem od pierwszych liter i przejściem do szczegółów po kliknięciu. Widok graficzny zostaje. Tabela **niczym nie steruje** (karty i grupy obok mają przełączniki działające jednym kliknięciem).
@@ -15,7 +15,7 @@ Lista urządzeń (ekran główny → kafelek grupy, np. „WSZYSTKIE”) jest zr
   - **widok graficzny** (oryginalny `GroupScreen`) z przełącznikiem `[Graficzny | Tabela]` (`device_table.view_graphic` „Graficzny”, `device_table.view_table` „Tabela”) przypiętym w wierszu tytułu modala 800 px, po lewej od X (`position: fixed`, `top: 68`, `zIndex: 1000`, poziomo liczone względem panelu bocznego 360 px i środka okna);
   - **widok tabeli** z tym samym przełącznikiem na prawym końcu pierwszego wiersza (wpis 056; wcześniej obok pola szukania).
 - **Domyślny jest widok graficzny.** Wybór jest zapamiętany w `localStorage` pod kluczem `deviceTable.view` (`"table"`/`"graphic"`, odczyt i zapis w `try/catch`). Od chwili wyboru tabeli każdy kafelek grupy otwiera od razu tabelę.
-- **Pozycja „Lista obiektów” w panelu bocznym (025):** w grupie „Podsumowanie” (`hub-settings.summary`), jako **pierwsza** pozycja, przed „Zużycie energii” (`hub-settings.power_consumption`): tytuł `device_table.menu` („Lista obiektów” / „Object list”), ikona `home-wifi`, zaznaczona, gdy aktywna jest trasa `GroupComponent`. Otwiera trasę `GroupComponent` z parametrami `{ id: null, name: t("all"), icon: "home-wifi", forceTable: true }`, czyli zawsze tabelę wszystkich urządzeń, **bez zmiany** zapamiętanego widoku kafelków.
+- **Pozycja „Lista urządzeń” w panelu bocznym (025; do wpisu 061 „Lista obiektów”):** w grupie „Podsumowanie” (`hub-settings.summary`), jako **pierwsza** pozycja, przed „Zużycie energii” (`hub-settings.power_consumption`): tytuł `device_table.menu` („Lista urządzeń” / „Device list”, od 061), ikona `home-wifi`, zaznaczona, gdy aktywna jest trasa `GroupComponent`. Otwiera trasę `GroupComponent` z parametrami `{ id: null, name: t("all"), icon: "home-wifi", forceTable: true }`, czyli zawsze tabelę wszystkich urządzeń, **bez zmiany** zapamiętanego widoku kafelków.
 - Kafelek konkretnej grupy otwiera tabelę zawężoną do jej kategorii (`params.id` → `row.category`), z tytułem grupy.
 
 ### Tabela
@@ -28,15 +28,18 @@ Lista urządzeń (ekran główny → kafelek grupy, np. „WSZYSTKIE”) jest zr
   - wyjście: `state.settings.options` zawiera `SET_ON_OFF` lub `SET_OPEN_CLOSE`,
   - oba naraz: urządzenie na obu zakładkach, z dopiskiem ` (We/Wy)` przy nazwie,
   - żadne: „Pozostałe” (piloty, klawiatury, czujki bezprzewodowe, termostaty). Nic nie znika.
-- **Kolumny** (nagłówki `device_table.column_<pole>`; nagłówek przyklejony u góry przy przewijaniu). Zestaw zależy od szerokości okna:
+- **Kolumny** (nagłówki `device_table.column_<pole>`; nagłówek przyklejony u góry przy przewijaniu). Zestaw zależy od szerokości okna (`LAYOUTS`/`layoutFor` w modelu, wpis 059); Moduł zawsze zaraz za Pomieszczeniem:
 
-| Okno | Nazwa | Wejścia | Wyjścia | Pozostałe |
-|---|---|---|---|---|
-| ≥ 1750 px | 240 | Pomieszczenie 130, Typ 80, Moduł 120, Zacisk 56, Obwód 80, Wartość 70, Czułość 70, Reakcja 150, Czas 60, Liczba 50, Stan 110, Sygnał 60, Zasilanie 70, Blokada 60, Usterki (reszta) | Pomieszczenie 130, Typ 80, Moduł 120, Zacisk 56, Stan 90, Sposób działania 150, Czas działania 80, Sygnał, Zasilanie, Blokada, Usterki | Pomieszczenie 130, Typ 110, Moduł 130, Zacisk 56, Sygnał, Zasilanie, Blokada, Usterki |
-| 1300–1749 px | 190 | jak wyżej bez Czas i Liczba, węższe (110/70/110/52/72/60/60/140/86, końcowe 48/60/50) | jak wyżej, węższe (Moduł 110) | jak wyżej, węższe (Moduł 120) |
-| < 1300 px | 140 | Pomieszczenie 110, Zacisk 50, Obwód 76, Reakcja 120, Stan 100, Usterki | Pomieszczenie 110, Zacisk 50, Stan 90, Czas działania 76, Usterki | Pomieszczenie 110, Moduł 120, Usterki |
+| Okno | Wejścia | Wyjścia | Pozostałe |
+|---|---|---|---|
+| ≥ 1750 px | Nazwa, Pomieszczenie, Moduł, Zacisk, Typ, Obwód, Wartość, Czułość, Reakcja, Czas, Liczba, Stan, Sygnał, Zasilanie, Blokada, Usterki | Nazwa, Pomieszczenie, Moduł, Zacisk, Typ, Stan, Sposób działania, Czas działania, Sygnał, Zasilanie, Blokada, Usterki | Nazwa, Pomieszczenie, Moduł, Zacisk, Typ, Sygnał, Zasilanie, Blokada, Usterki |
+| 1300–1749 px | jak wyżej bez Typ, Czas i Liczba | jak wyżej bez Typ | jak wyżej |
+| < 1300 px | Nazwa, Pomieszczenie, Moduł, Zacisk, Obwód, Reakcja, Stan, Usterki | Nazwa, Pomieszczenie, Moduł, Zacisk, Stan, Sposób działania, Czas działania, Usterki | Nazwa, Pomieszczenie, Moduł, Usterki |
 
-- **Puste kolumny (056):** kolumna bez wartości w żadnym wierszu bieżącej zakładki znika (`visibleColumns`). Zakres liczony bez szukania, filtrów i typów, więc kolumny nie skaczą przy pisaniu. Gdy zniknie elastyczna „Usterki”, ostatnia pozostała kolumna bierze wolne miejsce.
+  Do wpisu 059 układy były w ekranie jako pary `[klucz, szerokość]` ze stałymi szerokościami, Moduł stał za Typem, a w wąskim oknie nie było Modułu na Wejściach i Wyjściach ani Sposobu działania na Wyjściach.
+- **Szerokości kolumn (060):** automatycznie według najdłuższego tekstu nagłówka (z ` ▼`) i komórek całej zakładki (bez szukania, filtrów i typów, więc nic nie skacze przy pisaniu), pomiar `canvas.measureText` czcionką Jost (`12px` nagłówek, `13px` komórka) + 12 px, w granicach 40–320 px; ostatnia kolumna wypełnia resztę. Przeciągnięcie uchwytu 6 px przy prawej krawędzi nagłówka zmienia szerokość (min 40 px, bez sortowania), dwuklik przywraca automatyczną. Szerokości użytkownika w `localStorage` `deviceTable.columnWidths`, osobno dla każdej zakładki. Gdy kolumny się nie mieszczą, tabela przewija się w poziomie.
+
+- **Puste kolumny (056):** kolumna bez wartości w żadnym wierszu bieżącej zakładki znika (`visibleColumns`). Zakres liczony bez szukania, filtrów i typów, więc kolumny nie skaczą przy pisaniu. Ostatnia pozostała kolumna bierze wolne miejsce.
 
 - **Treść komórek** (tylko dane, które aplikacja już ma; 0 dodatkowych żądań do centrali):
 
@@ -95,7 +98,7 @@ Nasłuch w fazie capture na `window`, tylko gdy tabela ma fokus nawigacji (`useF
 Zapytanie, zakładka, sortowanie, filtry (z wybranymi typami) i pomieszczenie są trzymane w pamięci modułu (`deviceTableStore`), więc przetrwają powrót ze szczegółów (także przez `Esc`, które w oryginale odmontowuje tabelę) i ponowne otwarcie tabeli w tej samej sesji. Znikają po zamknięciu aplikacji.
 
 ### Telefon, tablet, wąskie okno
-Poniżej 900 px przy otwarciu trasy: wyłącznie oryginalny `GroupScreen`, bez przełącznika i bez pozycji „Lista obiektów” w panelu.
+Poniżej 900 px przy otwarciu trasy: wyłącznie oryginalny `GroupScreen`, bez przełącznika i bez pozycji „Lista urządzeń” w panelu.
 
 ## Punkty zaczepienia
 - Rejestracja tras (w 1.1.0 `misc/module_2541.js`, ładowana z `components/unnamed/module_2526.js`): `<oe.Screen name={module55.ScreenName.GroupComponent} component={GroupScreen.GroupScreen} options={getModalOpts.getModalOpts} />` (w 1.2.0: `GroupComponent` 3 trafienia). Uwaga: `components/getModalOpts.js` też rejestruje `GroupComponent`; aktywna jest lista z `HomeDashboard`, `HubPowerConsumption`, `HomeSettings` pod `connection.connected`.
@@ -112,9 +115,9 @@ Poniżej 900 px przy otwarciu trasy: wyłącznie oryginalny `GroupScreen`, bez p
 |---|---|
 | `DeviceTableRoute.js` | eksporty `DeviceTableRoute` (wybór drogi `useRef(isDesktopEditor())`, tryb z `params.forceTable ? "table" : loadViewMode()`, przełączanie i zapis trybu) oraz `ViewToggle` (`pinned` = przypięty w wierszu tytułu) |
 | `DeviceTableScreen.js` | ekran tabeli: wiersze z zakładkami i filtrami, chipy typów, szukanie z `×`, kolumny wg szerokości bez pustych, klawiatura, `openDetails`, obsługa `Esc` w szczegółach |
-| `deviceTableModel.js` | czyste funkcje bez usług aplikacji: `classifyDevice(device, state, names)`, `buildRows(t, rooms, states, names)`, `matchesQuery`, `matchesTypes`, `typeOptions`, `visibleColumns`, `sortRows`, `isBlocked`; ładuje się w testach node |
+| `deviceTableModel.js` | czyste funkcje bez usług aplikacji: `classifyDevice(device, state, names)`, `buildRows(t, rooms, states, names)`, `matchesQuery`, `matchesTypes`, `typeOptions`, `visibleColumns`, `sortRows`, `isBlocked`; od 059–060 `LAYOUTS`, `layoutFor`, `cellText`, `autoWidths`, `columnWidths`, `clampWidth`, `MIN_COLUMN_WIDTH`; ładuje się w testach node |
 | `deviceTableNames.js` | `deviceTableNames`: odwołania do usług przekazywane do modelu (`roomName` = `ResolveRoomName`, `isInput` = `IsExpanderInput`, `isTamper` = `IsTemporaryChannel`, `channelName` = `GetChannelName`, `deviceName` = `GetDeviceName`) (055) |
-| `deviceTableStore.js` | stan w pamięci (`loadTableState`/`saveTableState`) i tryb widoku w `localStorage` (`loadViewMode`/`saveViewMode`, klucz `deviceTable.view`) |
+| `deviceTableStore.js` | stan w pamięci (`loadTableState`/`saveTableState`) i tryb widoku w `localStorage` (`loadViewMode`/`saveViewMode`, klucz `deviceTable.view`); szerokości kolumn (`loadColumnWidths`/`saveColumnWidths`, klucz `deviceTable.columnWidths`, 060) |
 | `clickShield.js` | `armClickShield()`: osłona 600 ms |
 | `useDeviceRows.js` | `useDeviceRows()`: `fromCacheWithStates("DeviceTable()", data => isNil(data) ? null : hub.structure.tree(data, t).rooms, (rooms, states) => rooms ? buildRows(t, rooms, states, deviceTableNames) : [])` (055; wcześniej `fromCache` i sam `device.state`); wspólne z przepisem 21 (dodany w commicie `5a50186`) |
 
@@ -135,7 +138,7 @@ Poniżej 900 px przy otwarciu trasy: wyłącznie oryginalny `GroupScreen`, bez p
 
 | Klucz | pl | en |
 |---|---|---|
-| `menu` | Lista obiektów | Object list |
+| `menu` | Lista urządzeń (061; wcześniej Lista obiektów) | Device list (061; wcześniej Object list) |
 | `view_graphic` / `view_table` | Graficzny / Tabela | Graphic / Table |
 | `search` | Szukaj po nazwie, pomieszczeniu lub module… (056; wcześniej „…po nazwie lub pomieszczeniu…”) | Search by name, room or module… |
 | `tab_input` / `tab_output` / `tab_other` | Wejścia / Wyjścia / Pozostałe | Inputs / Outputs / Other |
@@ -145,7 +148,7 @@ Poniżej 900 px przy otwarciu trasy: wyłącznie oryginalny `GroupScreen`, bez p
 | `yes` / `on` / `off` | Tak / Włączone / Wyłączone | Yes / On / Off |
 | `column_name`, `column_room`, `column_deviceType`, `column_channel` | Nazwa, Pomieszczenie, Typ, Zacisk | Name, Room, Type, Terminal |
 | `column_circuit`, `column_sensitivity`, `column_reaction`, `column_countTime`, `column_count`, `column_inputState` | Obwód, Czułość, Reakcja, Czas, Liczba, Stan | Circuit, Sensitivity, Reaction, Time, Count, State |
-| `column_state`, `column_outputReaction`, `column_duration` | Stan, Sposób działania, Czas działania | State, Reaction, Duration |
+| `column_state`, `column_outputReaction`, `column_duration` | Stan, Sposób działania, Czas działania | State, Operating mode (059; wcześniej Reaction), Duration |
 | `column_signal`, `column_power`, `column_blockedText`, `column_errors` | Sygnał, Zasilanie, Blokada, Usterki | Signal, Power, Blocked, Faults |
 | `column_module`, `column_inputValue` (056) | Moduł, Wartość | Module, Value |
 | `filter_all_types`, `main_board` (056) | Wszystkie typy, Centrala | All types, Main board |
@@ -161,13 +164,15 @@ Przepis 08. Strona z `modalMaxWidth` wymaga dodatku do `webPageStyle` z przepisu
 3. Wpisanie „lazi”: tylko urządzenia z „Łazienka”; `Enter` otwiera szczegóły; `Esc` w szczegółach wraca do tabeli, szukanie zostaje; `Esc` w tabeli czyści, drugi `Esc` zamyka.
 4. Podwójny klik w wiersz: otwierają się szczegóły, a drugi klik nie dochodzi do `document` (test z nasłuchem w DevTools, bez klikania w szczegółach niczego poza strzałką wstecz).
 5. Zmiana szerokości okna: zmienia się zestaw kolumn, droga zostaje.
-6. Panel boczny: „Lista obiektów” otwiera tabelę wszystkich urządzeń; kafelek „WSZYSTKIE” dalej otwiera zapamiętany widok (np. graficzny).
+6. Panel boczny: „Lista urządzeń” otwiera tabelę wszystkich urządzeń; kafelek „WSZYSTKIE” dalej otwiera zapamiętany widok (np. graficzny).
 7. `grep -rE "hub\.control|\.Send\(|DeviceControlCard|DevicesControlWidget|renderWidget|HeaderActionContainer|executeCommand" src/renderer/app/desktop/deviceTable` nic nie zwraca.
-8. Okno < 900 px: oryginalny `GroupScreen`, brak „Lista obiektów”.
-9. `npm --prefix work/working/tools test` (`test/unit/desktop/deviceTableModel.test.js`: stan ze strumienia i zapas z urządzenia, usterki z pamięci, „Centrala” i nazwa ogólna, podział wyjść po stanie na żywo, szukanie po module, chipy typów, `visibleColumns`, `returnsToTable`).
+8. Okno < 900 px: oryginalny `GroupScreen`, brak „Listy urządzeń”.
+9. `npm --prefix work/working/tools test` (`test/unit/desktop/deviceTableModel.test.js`: stan ze strumienia i zapas z urządzenia, usterki z pamięci, „Centrala” i nazwa ogólna, podział wyjść po stanie na żywo, szukanie po module, chipy typów, `visibleColumns`, układy z Modułem za Pomieszczeniem, Sposób działania, `autoWidths`, `columnWidths`, `returnsToTable`).
 10. Z centralą (055): kolumny Obwód, Stan, Sygnał, Zasilanie, Blokada i Usterki wypełnione; „Naruszone” przy otwartym czujniku pokazuje to wejście; „Z usterkami” pokazuje też urządzenia z awarią tylko w pamięci; „Wyjścia” mają przekaźniki i rolety; zmianę stanu widać bez ponownego otwierania.
 11. Moduł i Wartość (056): „Moduł” z typem i numerem seryjnym, wejścia płyty głównej jako „Centrala”, podpowiedź z nazwą ogólną; „Wartość” w Ω; chipy typów tylko przy co najmniej dwóch typach, wybór kilku sumuje typy, „Wszystkie typy” zdejmuje wybór; kolumna pusta w całej zakładce nie jest pokazywana; `×` czyści szukanie.
 12. Szczegóły (057): z tabeli obiektów X i `Esc` wracają do tabeli z zachowanym szukaniem; z kafelka na ekranie głównym X zamyka jak w oryginale.
+13. Układy (059): przy każdej szerokości okna Moduł zaraz za Pomieszczeniem, w oknie < 1300 px na Wyjściach „Sposób działania”; po angielsku „Operating mode”.
+14. Szerokości (060): kolumny według najdłuższego tekstu, bez skakania przy szukaniu; przeciągnięcie krawędzi nagłówka zmienia szerokość bez sortowania i zostaje po ponownym otwarciu (osobno dla zakładek), dwuklik przywraca automatyczną; przy za szerokich kolumnach przewijanie w poziomie.
 
 ## Ryzyka przy nowej wersji
 - **Przypięty przełącznik** ma pozycję liczoną na sztywno (`calc(360px + (100vw - 360px) / 2 + min(400px, (100vw - 360px) / 2 - 40px) - 240px)`, `top: 68`), zależną od szerokości panelu bocznego 360 px, modala 800 px i miejsca X. Zmiana układu w 1.2.0 przesunie go na tytuł albo na X. Rozważ portal do nagłówka modala.
@@ -178,4 +183,5 @@ Przepis 08. Strona z `modalMaxWidth` wymaga dodatku do `webPageStyle` z przepisu
 - **X w szczegółach (057):** zależy od tego, że `Page` dalej przekazuje `closeHandler` do X i `Esc`, i od kształtu stanu nawigatora (`routes`, `index`). Nowy ekran tabeli, z którego otwiera się szczegóły, dopisz do `TABLE_SCREENS`.
 - `useNavigation().getState()` i `isFocused()` zależą od wersji `@react-navigation`; obsługa `Esc` w szczegółach może przestać działać, jeśli stos modali będzie inny.
 - Rozbieżność z projektem: progi szerokości w kodzie (okno 1750/1300 px) różnią się od projektu (tabela 1400/950/640 px), a magazyn stanu nie trzyma podświetlenia, przewinięcia i nie rozdziela stanu per centrala (`hubIdentifier`). Przy przenoszeniu zachowaj zachowanie z kodu albo świadomie dopasuj do projektu.
+- **Szerokości (060):** pomiar zakłada czcionkę Jost 12/13 px z `styles.headerCell`/`styles.cell`; zmiana czcionki w stylach bez zmiany `HEADER_FONT`/`CELL_FONT` da za wąskie lub za szerokie kolumny. Uchwyt korzysta z Pointer Events i zmiennych CSS w stylu `div`, co musi dalej przechodzić przez RNW. Nowa kolumna nie potrzebuje szerokości, wystarczy klucz w `LAYOUTS`.
 - RNW 0.21: `onClick` na `View`, `nativeID` (dla `getElementById` przy przewijaniu), `position: "sticky"`/`"fixed"`, `cursor` muszą dalej trafiać do DOM. Komórki z `title` są zwykłymi `div`, więc nie zależą od RNW.

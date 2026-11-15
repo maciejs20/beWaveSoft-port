@@ -2,9 +2,9 @@
 
 **Portowanie kolejnego wydania Satel i wszystkie stałe ustalenia: [PORTOWANIE.md](PORTOWANIE.md). Instrukcja dla agenta AI, który nanosi przepisy na nowe wydanie: [AGENT.md](AGENT.md).**
 
-Funkcjonalna specyfikacja wszystkich naszych zmian w BE WAVE Soft firmy Satel. Wersja bazowa: oryginał **1.2.0** (Electron 44.9.3). Ostatnie wydanie portu: **1.2.0-port.2** (2026-11-14); w toku ([Unreleased] w `CHANGELOG.md`): przebudowa edytora ekranów TSH (wpisy 044–054), tabela obiektów i panel boczny (wpisy 055–058). Przepisy mają pozwolić odtworzyć każdą zmianę w kolejnym wydaniu Satel, także wtedy, gdy numery modułów webpacka, nazwy po minifikacji i numery wierszy będą inne.
+Funkcjonalna specyfikacja wszystkich naszych zmian w BE WAVE Soft firmy Satel. Wersja bazowa: oryginał **1.2.0** (Electron 44.9.3). Ostatnie wydanie portu: **1.2.0-port.2** (2026-11-14); od następnego wydania wersje mają postać `<wersja Satel>-modX.Y` (pierwsza wydana: `1.2.0-mod3.1`; `1.2.0-mod3.0` był tylko buildem testowym); w 1.2.0-mod3.1: przebudowa edytora ekranów TSH (wpisy 044–054, BETA: 062), tabela urządzeń i panel boczny (wpisy 055–061), wersja moda w aplikacji (wpis 063). Przepisy mają pozwolić odtworzyć każdą zmianę w kolejnym wydaniu Satel, także wtedy, gdy numery modułów webpacka, nazwy po minifikacji i numery wierszy będą inne.
 
-Źródła: `REJESTR-ZMIAN.md` (wpisy 001–058, kod przed i po), `CHANGELOG.md`, `WYMAGANIA.md` (wymagania 1–15), `PROJEKT-RUTYNY.md`, `PROJEKT-TABELA-OBIEKTOW.md`, `PROJEKT-TSH.md`, `PROJEKT-TSH-EDYTOR.md`, nasze nowe moduły w `work/working/src` i historia gita (znaczniki `1.1.0-port.3`, `1.2.0-port.1`). Przepis opisuje zachowanie i sposób wdrożenia. Dokładny kod „przed i po” dla wydania 1.2.0 jest w rejestrze, a pełne pliki nowych komponentów w `work/working/src`.
+Źródła: `REJESTR-ZMIAN.md` (wpisy 001–063, kod przed i po), `CHANGELOG.md`, `WYMAGANIA.md` (wymagania 1–15), `PROJEKT-RUTYNY.md`, `PROJEKT-TABELA-OBIEKTOW.md`, `PROJEKT-TSH.md`, `PROJEKT-TSH-EDYTOR.md`, nasze nowe moduły w `work/working/src` i historia gita (znaczniki `1.1.0-port.3`, `1.2.0-port.1`). Przepis opisuje zachowanie i sposób wdrożenia. Dokładny kod „przed i po” dla wydania 1.2.0 jest w rejestrze, a pełne pliki nowych komponentów w `work/working/src`.
 
 **Ścieżki** (jak w nagłówku `REJESTR-ZMIAN.md`): względem `work/working/`, a skrócone (`screens/`, `logic/`, `components/`, `hooks/`, `misc/`, `i18n/`, `desktop/`) względem `work/working/src/renderer/app/`. `src/main/` to proces główny.
 
@@ -20,13 +20,13 @@ Funkcjonalna specyfikacja wszystkich naszych zmian w BE WAVE Soft firmy Satel. W
 
 | Id | Tytuł | Kategoria | Platformy | Wpisy rejestru | Zależy od |
 |---|---|---|---|---|---|
-| [01](01-tsh-soft.md) | TSH Soft wyłączony, edytor ekranów na desktopie | port: renderer i proces główny; desktop: edytor ekranów | Linux, macOS | 001, 002, 035, 036, 037, 044–054 | 08 (edytor), 07 (wpis 034: grafiki z `TSH_soft.exe`) |
+| [01](01-tsh-soft.md) | TSH Soft wyłączony, edytor ekranów na desktopie | port: renderer i proces główny; desktop: edytor ekranów | Linux, macOS | 001, 002, 035, 036, 037, 044–054, 062 | 08 (edytor), 07 (wpis 034: grafiki z `TSH_soft.exe`) |
 | [02](02-aktualizacje.md) | Aktualizacje wyłączone | port: proces główny | Linux, macOS | 003 | — |
 | [03](03-klucz-bazy-realm.md) | Klucz bazy Realm bez magazynu sekretów, plik `0600` | port: proces główny | Linux (004), Linux i macOS (005) | 004, 005 | — |
 | [04](04-wifi-linux.md) | Wi-Fi przez `nmcli` | port: proces główny | Linux | 006 | — |
 | [05](05-zamykanie-aplikacji.md) | Zamykanie aplikacji: okno X kończy program, „Zakończ” bez błędu | port: proces główny | Linux, macOS | 031, 039, 040 | — |
 | [06](06-natywne-moduly-i-binaria.md) | Moduły natywne i binaria platform | port: `node_modules` | Linux, macOS | 007, 008 | — |
-| [07](07-budowanie-i-instalatory.md) | Budowanie z nazwanego kodu, uruchamianie, instalatory | port: budowanie i pakiety | Linux, macOS | 032, 033, 034 | 06 |
+| [07](07-budowanie-i-instalatory.md) | Budowanie z nazwanego kodu, uruchamianie, instalatory | port: budowanie i pakiety | Linux, macOS | 032, 033, 034, 063 | 06 |
 | [08](08-droga-desktopowa.md) | Przełącznik drogi desktopowej (`isDesktopEditor`) | desktop: podstawa | Linux, macOS | 009 | — |
 | [09](09-kroki-warunku-i-akcji-domyslne.md) | Domyślne „Włącz” i „Stan wejścia”, bez zielonego komunikatu | desktop: edytor rutyn | Linux, macOS | 010, 011, 023 | 08 |
 | [10](10-podsumowanie-warunkow-i-akcji.md) | Pełne nazwy i operator w podsumowaniu | desktop: edytor rutyn | Linux, macOS | 012 | 08 |
@@ -38,16 +38,16 @@ Funkcjonalna specyfikacja wszystkich naszych zmian w BE WAVE Soft firmy Satel. W
 | [16](16-zapis-rutyny.md) | Zapis rutyny: jeden punkt, `Ctrl+Enter`, błąd, krótki komunikat | desktop: edytor rutyn | Linux, macOS | 018, 021 | 08, 12, 15 |
 | [17](17-zwarty-ekran-rutyny.md) | Zwarty ekran rutyny | desktop: edytor rutyn | Linux, macOS | 020 | 08, 15 |
 | [18](18-lista-rutyn-tabela.md) | Lista rutyn i scen jako tabela | desktop: automatyka | Linux, macOS | 022 | 08 |
-| [19](19-tabela-obiektow.md) | Tabela obiektów i pozycja „Lista obiektów” | desktop: urządzenia | Linux, macOS | 024, 025, 055, 056, 057 | 08 |
+| [19](19-tabela-obiektow.md) | Tabela obiektów i pozycja „Lista urządzeń” | desktop: urządzenia | Linux, macOS | 024, 025, 055, 056, 057, 059, 060, 061 | 08 |
 | [20](20-potwierdzenie-sterowania.md) | Potwierdzenie poleceń grupowych (pojedyncze wyjścia bez potwierdzenia) | desktop: bezpieczeństwo | Linux, macOS | 026, 038 | 08 |
 | [21](21-tabela-awarii.md) | Tabela aktywnych awarii | desktop: urządzenia | Linux, macOS | 027, 055, 057 | 08, 19 |
 | [22](22-dziennik-zdarzen.md) | Dziennik zdarzeń w wierszach | desktop: zdarzenia | Linux, macOS | 028 | 08 |
-| [23](23-panel-boczny.md) | Panel boczny ze zwijanymi sekcjami | desktop: nawigacja | Linux, macOS | 029, 058 | 08 (19 dla pozycji „Lista obiektów”) |
+| [23](23-panel-boczny.md) | Panel boczny ze zwijanymi sekcjami | desktop: nawigacja | Linux, macOS | 029, 058 | 08 (19 dla pozycji „Lista urządzeń”) |
 | [24](24-pomieszczenia.md) | Pomieszczenia z małym zdjęciem i tabela pomieszczenia | desktop: urządzenia | Linux, macOS | 030 | 08, 19 |
-| [25](25-grupy-panelu-bocznego.md) | Grupy panelu bocznego, „Monitoring” w Integracji i „Mój profil” w Użytkownikach | desktop: nawigacja | Linux, macOS | 041, 042, 058 | 08, 23 (19 dla „Listy obiektów”) |
+| [25](25-grupy-panelu-bocznego.md) | Grupy panelu bocznego, „Monitoring” w Integracji i „Mój profil” w Użytkownikach | desktop: nawigacja | Linux, macOS | 041, 042, 058, 061 | 08, 23 (19 dla „Listy urządzeń”) |
 | [26](26-sygnal-na-kafelkach.md) | Sygnał radiowy na kafelkach urządzeń w pomieszczeniu | desktop: urządzenia | Linux, macOS | 043 | 08 |
 
-Każdy wpis rejestru 001–058 jest w co najmniej jednym przepisie. Wpisy 055, 057 i 058 zmieniają wspólny kod dwóch przepisów i są w obu; 034 opisuje przepis 07, a przepis 01 tylko powołuje się na niego jako zależność:
+Każdy wpis rejestru 001–063 jest w co najmniej jednym przepisie. Wpisy 055, 057, 058 i 061 zmieniają wspólny kod dwóch przepisów i są w obu; 034 opisuje przepis 07, a przepis 01 tylko powołuje się na niego jako zależność:
 
 | Wpis | Przepis | Wpis | Przepis | Wpis | Przepis |
 |---|---|---|---|---|---|
@@ -70,9 +70,10 @@ Każdy wpis rejestru 001–058 jest w co najmniej jednym przepisie. Wpisy 055, 0
 | 017 | 15 | 035 | 01 | 053 | 01 |
 | 018 | 16 | 036 | 01 | 054 | 01 |
 | 055 | 19, 21 | 056 | 19 | 057 | 19, 21 |
-| 058 | 23, 25 | | | | |
+| 058 | 23, 25 | 059 | 19 | 060 | 19 |
+| 061 | 19, 25 | 062 | 01 | 063 | 07 |
 
-Wydania: 001–031 powstały na 1.1.0 (1.1.0-port.1 … 1.1.0-port.3) i w 1.2.0-port.1 zostały przeniesione na 1.2.0; 032, 033 w 1.2.0-port.1; 034–043 w 1.2.0-port.2; 044–058 w [Unreleased].
+Wydania: 001–031 powstały na 1.1.0 (1.1.0-port.1 … 1.1.0-port.3) i w 1.2.0-port.1 zostały przeniesione na 1.2.0; 032, 033 w 1.2.0-port.1; 034–043 w 1.2.0-port.2; 044–063 w 1.2.0-mod3.1.
 
 Wymagania użytkownika (`WYMAGANIA.md`) a przepisy: 1 → 12; 2 → 13, 14; 3 → 09; 4 → 10; 5 → 12, 15; 6 → 12; 7 → 11; 8 → 12; 9 → 09, 10, 13, 14; 10 → 19; 11 → 12; 12 → 17; 13 → 16; 14 → 18; 15 → 20, 21, 22, 23, 24 (oraz decyzja „uruchamianie rutyn bez potwierdzenia” w 18 i 20).
 
@@ -83,7 +84,7 @@ Wymagania użytkownika (`WYMAGANIA.md`) a przepisy: 1 → 12; 2 → 13, 14; 3 �
 3. **Pliki współdzielone.** Komponenty używane też przez inne ekrany (`Page`/`webPageStyle`, `PageHeader`, `useEscapeHandler`, `RoomWithDeviceGroup`, `SelectOption`, `GetInitialAction`) zmieniamy tylko dodatkami, które bez nowych właściwości zachowują się jak oryginał.
 4. **Droga ustalana raz.** Ekran, który przełącza całe drzewo komponentów, zapamiętuje wynik `isDesktopEditor()` przy montowaniu (`useRef(...).current`), żeby zmiana rozmiaru okna nie podmieniła komponentu i nie zgubiła danych, z wyjątkami opisanymi w przepisie 08.
 5. **Bezpieczeństwo centrali alarmowej.** Nowe widoki tylko czytają dane, a każde sterowanie przechodzi przez te same funkcje co w oryginale. Testy z prawdziwym zapisem lub sterowaniem robi wyłącznie użytkownik, na nieszkodliwym wyjściu.
-6. **Dokumentacja.** Po naniesieniu: wpis w `CHANGELOG.md` (wersja oryginału i nasza, np. `1.3.0-port.1`) oraz aktualizacja wpisu w `REJESTR-ZMIAN.md` (nowe kotwice i kod przed/po dla nowego wydania).
+6. **Dokumentacja.** Po naniesieniu: wpis w `CHANGELOG.md` (wersja oryginału i nasza, np. `1.3.0-mod4.0`) oraz aktualizacja wpisu w `REJESTR-ZMIAN.md` (nowe kotwice i kod przed/po dla nowego wydania).
 
 ## Jak użyć przepisów w nowym wydaniu
 

@@ -1,5 +1,5 @@
 // Desktop object table (desktop/deviceTable/deviceTableModel.js): rows take the live state from the state stream
-// (since 1.2.0 Realm keeps no device state), module column, type filter and hiding of empty columns.
+// (since 1.2.0 Realm keeps no device state), module column, type filter, hiding of empty columns, column layouts and widths.
 // Run: npm --prefix work/working/tools test  (from the repo root)
 "use strict";
 const { describe, it } = require("node:test");
@@ -104,18 +104,67 @@ describe("type filter", () => {
 });
 
 describe("visibleColumns", () => {
-  const columns = [["room", 130], ["circuit", 80], ["signal", 60], ["errors", 0]];
+  const columns = ["room", "circuit", "signal", "errors"];
   it("returns the same columns when every column has a value", () => {
     const rows = [{ room: "a", circuit: "x", signal: "1%", errors: "e" }];
     assert.equal(M.visibleColumns(columns, rows), columns);
   });
-  it("drops columns empty in all rows and gives the free width to the last one", () => {
+  it("drops columns empty in all rows", () => {
     const rows = [{ room: "a", circuit: "", signal: "1%", errors: "" }, { room: "b", circuit: "x", signal: "", errors: "" }];
-    assert.deepEqual(M.visibleColumns(columns, rows), [["room", 130], ["circuit", 80], ["signal", 0]]);
+    assert.deepEqual(M.visibleColumns(columns, rows), ["room", "circuit", "signal"]);
   });
-  it("keeps the flexible column when it has a value", () => {
-    const rows = [{ room: "a", circuit: "", signal: "", errors: "e" }];
-    assert.deepEqual(M.visibleColumns(columns, rows), [["room", 130], ["errors", 0]]);
+});
+
+describe("layouts", () => {
+  it("show the module right after the room on inputs and outputs in every width", () => {
+    for (const width of [1000, 1300, 1750]) {
+      for (const tab of ["input", "output"]) {
+        const layout = M.layoutFor(width, tab);
+        assert.equal(layout.indexOf("module"), layout.indexOf("room") + 1, `${width} ${tab}`);
+      }
+    }
+  });
+  it("show the operating mode on outputs in every width", () => {
+    for (const width of [1000, 1300, 1750]) {
+      assert.ok(M.layoutFor(width, "output").includes("outputReaction"), String(width));
+    }
+  });
+});
+
+describe("operating mode", () => {
+  it("uses the output reaction type of the device, as the details screen does", () => {
+    const k = key("9", "1");
+    const live = states([k, { settings: { options: [C.SET_ON_OFF] } }]);
+    const [bi] = M.buildRows(t, rooms(device(T.ASW_210, k, { outputReactionType: E.OutputReactionType.SWITCH_BI })), live, names);
+    assert.equal(bi.outputReaction, "t:common.options.device.output_reaction_type.values.switch_bi");
+    const [none] = M.buildRows(t, rooms(device(T.ASW_210, k)), live, names);
+    assert.equal(none.outputReaction, "");
+  });
+});
+
+describe("column widths", () => {
+  const measure = (text, kind) => text.length * (kind === "header" ? 5 : 10);
+  it("fit the longest cell or header text plus padding", () => {
+    const rows = [{ name: "abc", kind: { input: true, output: true }, room: "Salon", module: "" }, { name: "a", kind: {}, room: "Kuchnia duża", module: null }];
+    const widths = M.autoWidths(["name", "room", "module"], rows, measure, { name: "Nazwa", room: "Pomieszczenie", module: "Moduł ▼" });
+    assert.equal(widths.name, "abc (We/Wy)".length * 10 + 12);
+    assert.equal(widths.room, "Kuchnia duża".length * 10 + 12);
+    assert.equal(widths.module, "Moduł ▼".length * 5 + 12);
+  });
+  it("keep automatic widths between the minimum and the maximum", () => {
+    const widths = M.autoWidths(["a", "b"], [{ a: "", b: "x".repeat(100) }], measure, {});
+    assert.equal(widths.a, M.MIN_COLUMN_WIDTH);
+    assert.equal(widths.b, 320);
+  });
+  it("clamp to the minimum width and round up", () => {
+    assert.equal(M.clampWidth(10), 40);
+    assert.equal(M.clampWidth(120.2), 121);
+    assert.equal(M.clampWidth(500, 320), 320);
+  });
+  it("take stored widths over automatic ones and ignore bad values", () => {
+    const widths = M.columnWidths(["room", "module", "errors", "signal"], { room: 100, module: 150, errors: 90 }, { room: 200, module: "x", errors: 5, other: 80 });
+    assert.deepEqual(widths, { room: 200, module: 150, errors: 40, signal: 40 });
+    assert.deepEqual(M.columnWidths(["room"], { room: 100 }, undefined), { room: 100 });
   });
 });
 

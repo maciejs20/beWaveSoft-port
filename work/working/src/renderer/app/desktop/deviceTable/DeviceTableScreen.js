@@ -21,22 +21,23 @@ var deviceTableStore = require("./deviceTableStore.js");
 var clickShield = require("./clickShield.js");
 var Color = GetHexColorTransparent.Color;
 var TABS = ["input", "output", "other"];
-var COMMON_END = [["signal", 60], ["power", 70], ["blockedText", 60], ["errors", 0]];
-var WIDE = {
-  input: [["room", 130], ["deviceType", 80], ["module", 120], ["channel", 56], ["circuit", 80], ["inputValue", 70], ["sensitivity", 70], ["reaction", 150], ["countTime", 60], ["count", 50], ["inputState", 110]].concat(COMMON_END),
-  output: [["room", 130], ["deviceType", 80], ["module", 120], ["channel", 56], ["state", 90], ["outputReaction", 150], ["duration", 80]].concat(COMMON_END),
-  other: [["room", 130], ["deviceType", 110], ["module", 130], ["channel", 56]].concat(COMMON_END)
-};
-var MEDIUM_END = [["signal", 48], ["power", 60], ["blockedText", 50], ["errors", 0]];
-var MEDIUM = {
-  input: [["room", 110], ["deviceType", 70], ["module", 110], ["channel", 52], ["circuit", 72], ["inputValue", 60], ["sensitivity", 60], ["reaction", 140], ["inputState", 86]].concat(MEDIUM_END),
-  output: [["room", 110], ["deviceType", 76], ["module", 110], ["channel", 52], ["state", 84], ["outputReaction", 130], ["duration", 70]].concat(MEDIUM_END),
-  other: [["room", 110], ["deviceType", 110], ["module", 120], ["channel", 52]].concat(MEDIUM_END)
-};
-var NARROW = {
-  input: [["room", 110], ["channel", 50], ["circuit", 76], ["reaction", 120], ["inputState", 100], ["errors", 0]],
-  output: [["room", 110], ["channel", 50], ["state", 90], ["duration", 76], ["errors", 0]],
-  other: [["room", 110], ["module", 120], ["errors", 0]]
+var HEADER_FONT = "12px Jost";
+var CELL_FONT = "13px Jost";
+// Text widths in the table font, cached per text; the cache starts again when the web font finishes loading.
+var createMeasure = function () {
+  var context = document.createElement("canvas").getContext("2d");
+  var cache = new Map();
+  return function (text, kind) {
+    var font = kind === "header" ? HEADER_FONT : CELL_FONT;
+    var cacheKey = `${font}|${text}`;
+    if (!cache.has(cacheKey)) {
+      if (context) {
+        context.font = font;
+      }
+      cache.set(cacheKey, context ? context.measureText(text).width : text.length * 7);
+    }
+    return cache.get(cacheKey);
+  };
 };
 var styles = {
   bar: {
@@ -121,6 +122,10 @@ var styles = {
     paddingRight: 8,
     color: Color.secondary900
   },
+  headerPress: {
+    flex: 1,
+    minWidth: 0
+  },
   headerCell: {
     fontSize: 12,
     paddingRight: 8,
@@ -132,14 +137,29 @@ var styles = {
     color: Color.secondary600
   }
 };
-var cellStyle = function (width) {
-  return width ? {
+// Widths come in as CSS variables of the table, so resizing a column does not re-render the rows.
+var cellStyle = function (column, last) {
+  var width = `var(--dt-${column})`;
+  return {
+    display: "flex",
+    position: "relative",
+    overflow: "hidden",
+    boxSizing: "border-box",
     width: width,
+    minWidth: last ? width : 0,
+    flexGrow: last ? 1 : 0,
     flexShrink: 0
-  } : {
-    flex: 1,
-    minWidth: 60
   };
+};
+var RESIZE_HANDLE = {
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  right: 0,
+  width: 6,
+  cursor: "col-resize",
+  touchAction: "none",
+  zIndex: 1
 };
 var Row = (0, react.memo)(function (props) {
   var row = props.row;
@@ -147,11 +167,9 @@ var Row = (0, react.memo)(function (props) {
     if (event.button === 0 && !String(window.getSelection?.() ?? "")) {
       props.onOpen(row);
     }
-  }}><View style={cellStyle(props.nameWidth)}><module28.Text style={styles.cell} numberOfLines={1}>{row.name}{row.kind.input && row.kind.output ? " (We/Wy)" : ""}</module28.Text></View>{props.columns.map(function (column) {
-      return <div key={column[0]} title={row[`${column[0]}Title`] || row[column[0]] || undefined} style={Object.assign({
-        display: "flex",
-        minWidth: 0
-      }, cellStyle(column[1]))}><module28.Text style={styles.cell} numberOfLines={1}>{row[column[0]]}</module28.Text></div>;
+  }}>{props.columns.map(function (column, index) {
+      var text = deviceTableModel.cellText(row, column);
+      return <div key={column} title={row[`${column}Title`] || text || undefined} style={cellStyle(column, index === props.columns.length - 1)}><module28.Text style={styles.cell} numberOfLines={1}>{text}</module28.Text></div>;
     })}</View>;
 }, function (previous, next) {
   return previous.highlighted === next.highlighted && previous.columns === next.columns && lodash.isEqual(previous.row, next.row);
@@ -171,6 +189,9 @@ exports.DeviceTableScreen = function (props) {
   var roomState = (0, react.useState)(saved.room);
   var highlightState = (0, react.useState)(null);
   var widthState = (0, react.useState)(window.innerWidth);
+  var storedWidthsState = (0, react.useState)(deviceTableStore.loadColumnWidths);
+  var draftWidthState = (0, react.useState)(null);
+  var fontsState = (0, react.useState)(0);
   var inputRef = (0, react.useRef)(null);
   var query = queryState[0];
   var tab = tabState[0];
@@ -193,6 +214,20 @@ exports.DeviceTableScreen = function (props) {
       return window.removeEventListener("resize", onResize);
     };
   }, []);
+  (0, react.useEffect)(function () {
+    var active = true;
+    document.fonts?.ready?.then(function () {
+      if (active) {
+        fontsState[1](function (count) {
+          return count + 1;
+        });
+      }
+    });
+    return function () {
+      active = false;
+    };
+  }, []);
+  var measure = (0, react.useMemo)(createMeasure, [fontsState[0]]);
   // Esc on details sitting directly above this table comes back here instead of the home screen.
   (0, react.useEffect)(function () {
     function onKeyDown(event) {
@@ -216,12 +251,16 @@ exports.DeviceTableScreen = function (props) {
     return name === "input" ? row.kind.input : name === "output" ? row.kind.output : !row.kind.input && !row.kind.output;
   };
   // Tab scope: category and room of this screen only, without the search and the filters.
-  var base = rows.filter(function (row) {
-    return (category === null || row.category === category) && (!params?.roomId || row.roomId === params.roomId);
-  });
-  var tabBase = base.filter(function (row) {
-    return inTab(row, tab);
-  });
+  var base = (0, react.useMemo)(function () {
+    return rows.filter(function (row) {
+      return (category === null || row.category === category) && (!params?.roomId || row.roomId === params.roomId);
+    });
+  }, [rows, category, params?.roomId]);
+  var tabBase = (0, react.useMemo)(function () {
+    return base.filter(function (row) {
+      return inTab(row, tab);
+    });
+  }, [base, tab]);
   var tabTypes = lodash.uniq(tabBase.map(function (row) {
     return row.deviceTypeId;
   }));
@@ -241,10 +280,77 @@ exports.DeviceTableScreen = function (props) {
   var rooms = lodash.uniq(rows.map(function (row) {
     return row.room;
   })).sort();
-  var shownColumns = deviceTableModel.visibleColumns((widthState[0] >= 1750 ? WIDE : widthState[0] >= 1300 ? MEDIUM : NARROW)[tab], tabBase);
+  var shownColumns = deviceTableModel.visibleColumns(deviceTableModel.layoutFor(widthState[0], tab), tabBase);
   var columns = (0, react.useMemo)(function () {
     return shownColumns;
   }, [shownColumns.join("|")]);
+  // Automatic widths fit every row of the tab, so they do not jump while searching or filtering.
+  var autoWidths = (0, react.useMemo)(function () {
+    var headers = {};
+    columns.forEach(function (column) {
+      headers[column] = `${t(`device_table.column_${column}`)} ▼`;
+    });
+    return deviceTableModel.autoWidths(columns, tabBase, measure, headers);
+  }, [columns, tabBase, measure, t]);
+  var storedWidths = storedWidthsState[0];
+  var widths = deviceTableModel.columnWidths(columns, autoWidths, storedWidths[tab]);
+  var draftWidth = draftWidthState[0];
+  if (draftWidth && draftWidth.tab === tab && widths[draftWidth.column] !== undefined) {
+    widths[draftWidth.column] = draftWidth.width;
+  }
+  var widthVariables = {};
+  columns.forEach(function (column) {
+    widthVariables[`--dt-${column}`] = `${widths[column]}px`;
+  });
+  var storeWidth = function (column, width) {
+    var own = Object.assign({}, storedWidths[tab]);
+    if (width === null) {
+      delete own[column];
+    } else {
+      own[column] = width;
+    }
+    var next = Object.assign({}, storedWidths, {
+      [tab]: own
+    });
+    storedWidthsState[1](next);
+    deviceTableStore.saveColumnWidths(next);
+  };
+  // Dragging the right border of a header cell sets the width; the header text keeps sorting on click.
+  var startResize = function (event, column) {
+    if (event.button !== 0) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    var handle = event.currentTarget;
+    var startX = event.clientX;
+    var startWidth = widths[column];
+    var current = startWidth;
+    var cursor = document.body.style.cursor;
+    handle.setPointerCapture?.(event.pointerId);
+    document.body.style.cursor = "col-resize";
+    function onMove(moveEvent) {
+      current = deviceTableModel.clampWidth(startWidth + moveEvent.clientX - startX);
+      draftWidthState[1]({
+        tab: tab,
+        column: column,
+        width: current
+      });
+    }
+    function onEnd() {
+      handle.removeEventListener("pointermove", onMove);
+      handle.removeEventListener("pointerup", onEnd);
+      handle.removeEventListener("pointercancel", onEnd);
+      document.body.style.cursor = cursor;
+      draftWidthState[1](null);
+      if (current !== startWidth) {
+        storeWidth(column, current);
+      }
+    }
+    handle.addEventListener("pointermove", onMove);
+    handle.addEventListener("pointerup", onEnd);
+    handle.addEventListener("pointercancel", onEnd);
+  };
   var highlightedRow = visible.find(function (row) {
     return row.id === highlightState[0];
   }) ?? visible[0];
@@ -321,16 +427,22 @@ exports.DeviceTableScreen = function (props) {
       checked: active
     }} onPress={onPress}><View style={[styles.chip, active && styles.chipOn]}><module28.Text style={[styles.chipText, active && styles.chipTextOn]}>{label}</module28.Text></View></module63.PressableOpacity>;
   };
-  var headerCell = function (column, width) {
+  var headerCell = function (column, last) {
     var sort = sortState[0];
-    return <View key={column} style={cellStyle(width)}><module63.PressableOpacity onPress={function () {
+    return <div key={column} style={Object.assign(cellStyle(column, last), {
+      alignSelf: "stretch",
+      alignItems: "center"
+    })}><module63.PressableOpacity style={styles.headerPress} onPress={function () {
         return sortState[1]({
           column: column,
           descending: sort.column === column && !sort.descending
         });
-      }}><module28.Text style={styles.headerCell} numberOfLines={1}>{t(`device_table.column_${column}`)}{sort.column === column ? sort.descending ? " ▼" : " ▲" : ""}</module28.Text></module63.PressableOpacity></View>;
+      }}><module28.Text style={styles.headerCell} numberOfLines={1}>{t(`device_table.column_${column}`)}{sort.column === column ? sort.descending ? " ▼" : " ▲" : ""}</module28.Text></module63.PressableOpacity><div role="separator" aria-orientation="vertical" style={RESIZE_HANDLE} onPointerDown={function (event) {
+        return startResize(event, column);
+      }} onDoubleClick={function () {
+        return storeWidth(column, null);
+      }} /></div>;
   };
-  var nameWidth = widthState[0] >= 1750 ? 240 : widthState[0] >= 1300 ? 190 : 140;
   var toggleType = function (id) {
     var active = selectedTypes.filter(function (type) {
       return tabTypes.includes(type);
@@ -384,9 +496,14 @@ exports.DeviceTableScreen = function (props) {
             highlightState[1](null);
             queryState[1]("");
             focusSearch();
-          }}><module28.Text style={styles.searchClearText}>×</module28.Text></module63.PressableOpacity>}</View><View style={styles.table}><View style={[styles.row, styles.header]}>{headerCell("name", nameWidth)}{columns.map(function (column) {
-          return headerCell(column[0], column[1]);
+          }}><module28.Text style={styles.searchClearText}>×</module28.Text></module63.PressableOpacity>}</View><View style={styles.table}><div style={Object.assign({
+        display: "flex",
+        flexDirection: "column",
+        width: "max-content",
+        minWidth: "100%"
+      }, widthVariables)}><View style={[styles.row, styles.header]}>{columns.map(function (column, index) {
+          return headerCell(column, index === columns.length - 1);
         })}</View>{visible.length === 0 && <module28.Text style={styles.empty}>{t("device_table.no_results")}</module28.Text>}{visible.map(function (row) {
-        return <Row key={row.id} row={row} columns={columns} nameWidth={nameWidth} highlighted={row === highlightedRow} onOpen={openDetails} />;
-      })}</View></module32.Page>;
+        return <Row key={row.id} row={row} columns={columns} highlighted={row === highlightedRow} onOpen={openDetails} />;
+      })}</div></View></module32.Page>;
 };

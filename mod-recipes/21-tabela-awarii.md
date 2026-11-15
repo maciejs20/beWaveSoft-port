@@ -2,7 +2,7 @@
 
 - **Wpisy rejestru:** 027, 055, 057
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** 1.1.0-port.2 (commit `5a50186`); 055 i 057 niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.1.0-port.2 (commit `5a50186`); 055 i 057 w 1.2.0-mod3.1, oryginał 1.2.0
 - **Wymagania:** 15 („Aktywne awarie: zwarta tabela”)
 
 ## Cel

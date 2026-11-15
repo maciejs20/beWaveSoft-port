@@ -1,11 +1,15 @@
 # Changelog
 
 Format oparty na [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-Wersje mają postać `<wersja oryginału>-port.<numer naszej poprawki>`. Oryginał to BE WAVE Soft firmy Satel, a port obejmuje macOS i Linuksa.
+Wersje mają postać `<wersja oryginału>-mod<X>.<Y>`: X rośnie przy nowych funkcjach, Y przy poprawkach (od 1.2.0-mod3.0; wcześniej `<wersja oryginału>-port.<n>`). Oryginał to BE WAVE Soft firmy Satel, a port obejmuje macOS i Linuksa.
 
 ## [Unreleased]
 
+## [1.2.0-mod3.1] - 2026-11-15
+
 Oryginał: BE WAVE Soft 1.2.0 (Electron 44.9.3).
+
+Nowy schemat wersji: `<wersja oryginału>-mod<X>.<Y>` (X nowe funkcje, Y poprawki), zamiast `-port.<n>`. Numeracja zaczyna się od 1.2.0-mod3.0; wersja 1.2.0-port.3 nigdy nie została wydana, a 1.2.0-mod3.0 nie został wydany (build testowy).
 
 ### Summary
 - Przebudowa edytora ekranów klawiatury TSH (REJESTR-ZMIAN 044–054): rozmiary i rysowanie jak w TSH Soft, układ na całe okno z paskiem narzędzi i powiększeniem, ekrany z miniaturami i warstwy, inspektor z wyborem ikon i menu „+ Widżet”, cofanie i skróty, poprawki z przeglądu (wciśnięcie poza podglądem, Esc przy pytaniach, skróty w trakcie pytania i przeciągania).
@@ -13,17 +17,23 @@ Oryginał: BE WAVE Soft 1.2.0 (Electron 44.9.3).
 - Niesprawdzone: macOS (tylko emulacja DPR 2), otwarcie edytora z prawdziwych ustawień klawiatury z centralą, zapis na klawiaturę, skróty Ctrl/Cmd+= − 0 wobec menu „View” Electrona, dotyk, powiększenie strony ≠ 100 %, ciemny motyw.
 
 ### Added
+- Pełna wersja moda w aplikacji: ekran powitalny i etykieta wersji (dół panelu bocznego, ekrany bez połączenia z centralą) pokazują np. `1.2.0-mod3.1` zamiast `1.2.0`. Wersję wstrzykuje build (`work/working/VERSION` albo `BEWAVE_VERSION`); wersja aplikacji używana przez logikę Satel (API, migracje, aktualizacje) zostaje `1.2.0` (REJESTR-ZMIAN 063).
 - Repozytorium do publikacji: `README.md` (instalacja, zawartość wydań, budowanie, wydawanie), licencja MIT dla naszych plików, `mod-recipes/AGENT.md` (praca z przepisami i agentem AI, gotowe prompty), `work/working/tools/export-public.sh` (eksport bez kodu Satel do osobnego repozytorium, odrzuca eksport z danymi osobowymi) i `release-notes.sh` (opis wydania z CHANGELOG). Przepisy w `mod-recipes/` uaktualnione do stanu 1.2.0-port.2 i wpisów 001–058.
 - Edytor ekranów klawiatury TSH: cofanie i ponawianie zmian (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z i Ctrl/Cmd+Y, do 100 kroków; wpisywanie w jedno pole i przytrzymana strzałka to jeden krok), Delete i Backspace usuwają zaznaczony widżet po pytaniu, Tab i Shift+Tab przechodzą po widżetach, G włącza i wyłącza siatkę edytora (przyciąganie, niezapisywana). Klawisze wpisywane w polach formularza zostają w polu. Cofnięcie do stanu z wczytania kasuje pytanie o niezapisane zmiany. Telefon, tablet i wąskie okno bez zmian.
 - Tabela obiektów (desktop): kolumny „Moduł” (typ i numer seryjny modułu, dla wejść płyty głównej „Centrala”, w podpowiedzi ogólna nazwa typu) i „Wartość” (rezystancja wejścia w Ω), wiersz chipów filtru typów urządzeń (wybór kilku naraz, „Wszystkie typy”; ukryty, gdy w zakładce jest jeden typ), szukanie także po module. Telefon, tablet i wąskie okno bez zmian (REJESTR-ZMIAN 056).
+- Tabela obiektów (desktop): szerokość kolumn dopasowana do najdłuższego tekstu w zakładce (40–320 px, ostatnia kolumna wypełnia resztę, bez skakania przy szukaniu); szerokość można zmienić, przeciągając krawędź nagłówka (dwuklik przywraca automatyczną), zapamiętana osobno dla każdej zakładki; gdy kolumny się nie mieszczą, tabela przewija się w poziomie. Telefon, tablet i wąskie okno bez zmian (REJESTR-ZMIAN 060).
 
 ### Changed
+- **Edytor ekranów klawiatury TSH jest w wersji BETA.** Działa poprawnie w sprawdzonych przypadkach, ale nie jest jeszcze dostatecznie przetestowany (m.in. zapis na prawdziwą klawiaturę, macOS, ciemny motyw). Przed zapisem ekranów zrób kopię konfiguracji klawiatury. Aplikacja pokazuje to pomarańczową plakietką „BETA” na początku paska narzędzi edytora (podpowiedź o kopii konfiguracji) i dopiskiem „(BETA)” na przycisku „Edytuj ekrany”. Telefon, tablet i wąskie okno bez zmian (REJESTR-ZMIAN 062).
+- Wersje i instalatory: schemat `<wersja oryginału>-mod<X>.<Y>` (`work/working/VERSION` = `1.2.0-mod3.1`). Paczka `.deb` ma wersję `1:1.2.0+mod3.1` (epoka 1, bo bez niej dpkg uznałby `1.2.0+mod3.1` za starszą od wydanej `1.2.0+port2`), plik `bewave-soft_1.2.0+mod3.1_amd64.deb`; `.pkg` ma wersję `1.2.0.3.1` (wyższą od wydanej `1.2.0.2`), plik `BE-WAVE-Soft-1.2.0-mod3.1-arm64.pkg`. `package-deb.sh` i `package-mac.sh` odmawiają nadpisania istniejącego pliku w `build/release`: każdy build dostaje nową nazwę. Stare wersje `-port.<n>` są nadal przyjmowane.
 - Linux: pole `Maintainer` paczki `.deb` ma neutralną nazwę projektu zamiast prywatnego adresu; własną ustawia zmienna `BW_MAINTAINER`.
 - Edytor ekranów klawiatury TSH: układ na całe okno. Nad trzema panelami pasek narzędzi (cofnij/ponów, siatka edytora, powiększenie z menu „Dopasuj / 50–400 %”, „Karta SD”, licznik danych z paskiem, lista skrótów „?”, „Anuluj” i „Zapisz” z plakietką błędów, która po kliknięciu zaznacza wskazany ekran lub widżet); po lewej ekrany, w środku podgląd na całą wolną przestrzeń w proporcjach klawiatury (Ctrl/Cmd+kółko powiększa wokół kursora, Ctrl/Cmd+0, 1, =, − ustawiają powiększenie), po prawej właściwości. Każdy panel przewija się osobno, strona nie; nie ma już dużego przycisku „Zapisz” w stopce. Wiersz stanu pod podglądem: kursor, położenie i rozmiar zaznaczonego widżetu, siatka, powiększenie. Edytor startuje na ekranie głównym. Esc przerywający przeciąganie lub odznaczający widżet nie zamyka edytora. Telefon, tablet i wąskie okno bez zmian.
 - Edytor ekranów klawiatury TSH: lewy panel z ekranami i warstwami. Ekrany mają miniatury, grupy „Ekrany użytkownika n/16” i „Ekrany dodatkowe”, plakietki „główny” i „własne kolory”, a ekran o nazwie z samych spacji ma tytuł „Ekran 1 (bez nazwy)” zamiast pustego wiersza. Warstwy pokazują widżety pokazanego ekranu z ikoną i treścią („„Brama””, nazwa urządzenia, scena, tryb czuwania, „Prostokąt 476×38”) zamiast „Tekst · 8, 240”; klik zaznacza widżet na podglądzie i odwrotnie, menu wiersza przenosi widżet na wierzch, do przodu, do tyłu, na spód albo usuwa (z pytaniem). Telefon, tablet i wąskie okno bez zmian.
 - Edytor ekranów klawiatury TSH: panel właściwości z zakładkami „Ekran” i „Widżet” (przełączają się z zaznaczeniem), zwijanymi sekcjami (Ogólne, Wygląd, Tło; Położenie i wielkość, Treść i urządzenie, Ikony, Kolory, Zachowanie), własnym przewijaniem i przyciskiem „Usuń widżet” na dole; wielkość widżetu przełącznikiem M/Ś/D. Ikony wybiera się z siatki glifów (najpierw ikony użyte w układzie, potem wszystkie, które rysuje klawiatura; strzałki, Enter, Esc), pole pokazuje glif zamiast kodu `0x11d`. Menu „+ Widżet” w pasku narzędzi i w warstwach: 21 typów w sześciu grupach z ikonami; nowy widżet trafia na środek widocznej części podglądu i jest od razu zaznaczony. Opcja ekranu „Pokaż siatkę” nazywa się teraz „Siatka na klawiaturze”. Telefon, tablet i wąskie okno bez zmian.
 - Tabela obiektów (desktop): pole szukania w osobnym wierszu tuż nad tabelą, większe, z przyciskiem × czyszczącym tekst; przełącznik widoku na prawym końcu pierwszego wiersza; kolumny puste w całej zakładce nie są pokazywane. X i Esc w szczegółach urządzenia otwartych z tabeli obiektów albo tabeli awarii wracają do tej tabeli zamiast na ekran główny. Telefon, tablet i wąskie okno bez zmian (REJESTR-ZMIAN 056, 057).
 - Panel boczny (desktop): „Podsumowanie” = Lista obiektów, Dziennik zdarzeń i nowa pozycja „Awarie: N” (wyróżniona przy awariach, przy zwiniętej grupie „⚠ N” w nagłówku; pomarańczowy pasek awarii nad panelem ukryty, na ekranie głównym bez zmian); „Konfiguracja” = Integracja, Harmonogramy, Symulacja obecności, Diagnostyka; nowa grupa „Pozostałe” (domyślnie zwinięta) = zagnieżdżony „Obiekt” (Ustawienia obiektu, Edytuj obiekt, Usuń obiekt z czerwoną ikoną), Dane instalatora, Klucz tokenów SATEL, Użytkownicy, Ustawienia e-mail i nowe nieznane pozycje na końcu. Grupa „Ustawienia” znika. Większe ikony strzałek w nagłówkach grup. Telefon, tablet i wąskie okno bez zmian (REJESTR-ZMIAN 058).
+- Tabela obiektów (desktop): kolumna „Moduł” zaraz za „Pomieszczeniem” w każdej zakładce i przy każdej szerokości okna (wcześniej w wąskim oknie nie było jej na Wejściach i Wyjściach); „Sposób działania” także w wąskim oknie na Wyjściach; angielski nagłówek „Reaction” tej kolumny to teraz „Operating mode” (REJESTR-ZMIAN 059).
+- Panel boczny (desktop): pozycja „Lista obiektów” nazywa się „Lista urządzeń” („Device list”) (REJESTR-ZMIAN 061).
 
 ### Fixed
 - Edytor ekranów klawiatury TSH: rozmiary czcionek i ikon jak w TSH Soft, także dla INT-TSG2 (tabela rozmiarów odczytana z TSH Soft zamiast połowy TSH2: na TSG2 duża ikona 84 px zamiast 114, mały tekst 12 px zamiast 9; TSH2 średni tekst 33 px, ikony 77/115/180 px). Pasek stanu, kropki stron, siatka i zegar wygaszacza w położeniach z kodu TSH; tekst widżetu nie jest już o kilka pikseli za nisko. Telefon, tablet i wąskie okno bez zmian.
@@ -154,6 +164,7 @@ Oryginał: BE WAVE Soft 1.1.0 (Electron 41.6.1).
 - Binaria tylko dla Windows z `node_modules`: `passport-desktop-win32-x64-msvc`, `@primno/dpapi` (`build`, `prebuilds`) oraz `build` w `bufferutil` i `utf-8-validate`.
 
 [Unreleased]: #unreleased
+[1.2.0-mod3.1]: #120-mod31---2026-11-15
 [1.2.0-port.2]: #120-port2---2026-11-14
 [1.2.0-port.1]: #120-port1---2026-11-13
 [1.1.0-port.3]: #110-port3---2026-10-30

@@ -1,7 +1,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.visibleColumns = exports.typeOptions = exports.matchesTypes = exports.isBlocked = exports.matchesQuery = exports.sortRows = exports.buildRows = exports.classifyDevice = undefined;
+exports.columnWidths = exports.autoWidths = exports.clampWidth = exports.cellText = exports.layoutFor = exports.LAYOUTS = exports.MIN_COLUMN_WIDTH = exports.visibleColumns = exports.typeOptions = exports.matchesTypes = exports.isBlocked = exports.matchesQuery = exports.sortRows = exports.buildRows = exports.classifyDevice = undefined;
 // Pure helpers of the desktop device table. Lookups that pull in app services come in through `names`
 // (see deviceTableNames.js), so this module also loads in unit tests.
 var ExpanderInputType = require("../../enums/ExpanderInputType.js");
@@ -161,22 +161,73 @@ exports.typeOptions = function (rows, counted) {
     return collator.compare(left.label, right.label);
   });
 };
-// Columns without a value in any of `rows`; when the flexible column goes, the last one left takes the free width.
+// Columns (keys) without a value in any of `rows` are left out; the last column left takes the free width.
 exports.visibleColumns = function (columns, rows) {
   var shown = columns.filter(function (column) {
     return rows.some(function (row) {
-      return !isNil(row[column[0]]) && row[column[0]] !== "";
+      return !isNil(row[column]) && row[column] !== "";
     });
   });
-  if (shown.length === columns.length) {
-    return columns;
+  return shown.length === columns.length ? columns : shown;
+};
+var COMMON_END = ["signal", "power", "blockedText", "errors"];
+// Column keys per window width and tab. Module follows the room in every layout, so it stays on screen.
+var LAYOUTS = exports.LAYOUTS = {
+  wide: {
+    input: ["name", "room", "module", "channel", "deviceType", "circuit", "inputValue", "sensitivity", "reaction", "countTime", "count", "inputState"].concat(COMMON_END),
+    output: ["name", "room", "module", "channel", "deviceType", "state", "outputReaction", "duration"].concat(COMMON_END),
+    other: ["name", "room", "module", "channel", "deviceType"].concat(COMMON_END)
+  },
+  medium: {
+    input: ["name", "room", "module", "channel", "circuit", "inputValue", "sensitivity", "reaction", "inputState"].concat(COMMON_END),
+    output: ["name", "room", "module", "channel", "state", "outputReaction", "duration"].concat(COMMON_END),
+    other: ["name", "room", "module", "channel", "deviceType"].concat(COMMON_END)
+  },
+  narrow: {
+    input: ["name", "room", "module", "channel", "circuit", "reaction", "inputState", "errors"],
+    output: ["name", "room", "module", "channel", "state", "outputReaction", "duration", "errors"],
+    other: ["name", "room", "module", "errors"]
   }
-  if (shown.length > 0 && !shown.some(function (column) {
-    return !column[1];
-  })) {
-    shown[shown.length - 1] = [shown[shown.length - 1][0], 0];
+};
+exports.layoutFor = function (windowWidth, tab) {
+  return LAYOUTS[windowWidth >= 1750 ? "wide" : windowWidth >= 1300 ? "medium" : "narrow"][tab];
+};
+// Text shown in a cell; the name tells a device that is both an input and an output.
+var cellText = exports.cellText = function (row, column) {
+  if (column === "name") {
+    return `${row.name ?? ""}${row.kind?.input && row.kind?.output ? " (We/Wy)" : ""}`;
   }
-  return shown;
+  return isNil(row[column]) ? "" : String(row[column]);
+};
+var MIN_COLUMN_WIDTH = exports.MIN_COLUMN_WIDTH = 40;
+var MAX_AUTO_WIDTH = 320;
+var CELL_PADDING = 12;
+var clampWidth = exports.clampWidth = function (width, max) {
+  return Math.min(max ?? Infinity, Math.max(MIN_COLUMN_WIDTH, Math.ceil(width)));
+};
+// Width that fits the longest text of a column (header or cell). `measure(text, "header" | "cell")` gives pixels.
+exports.autoWidths = function (columns, rows, measure, headers) {
+  var widths = {};
+  columns.forEach(function (column) {
+    var longest = measure(headers?.[column] ?? "", "header");
+    rows.forEach(function (row) {
+      var text = cellText(row, column);
+      if (text) {
+        longest = Math.max(longest, measure(text, "cell"));
+      }
+    });
+    widths[column] = clampWidth(longest + CELL_PADDING, MAX_AUTO_WIDTH);
+  });
+  return widths;
+};
+// Widths set by the user win over the automatic ones; a stored value that is not a number is ignored.
+exports.columnWidths = function (columns, auto, stored) {
+  var widths = {};
+  columns.forEach(function (column) {
+    var own = stored?.[column];
+    widths[column] = typeof own === "number" && Number.isFinite(own) ? clampWidth(own) : auto[column] ?? MIN_COLUMN_WIDTH;
+  });
+  return widths;
 };
 exports.sortRows = function (rows, sort) {
   var direction = sort.descending ? -1 : 1;

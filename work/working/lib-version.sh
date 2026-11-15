@@ -2,8 +2,9 @@
 # Shared version helpers for the build scripts in linux/ and mac/. Source it, do not run it (bash 3.2+).
 #   . "$WORKING/lib-version.sh"
 # Single source of truth:
-#   port version     - working/VERSION ("<original>-port.<n>"), override: BEWAVE_VERSION
-#   original version - the part of the port version before "-port"
+#   port version     - working/VERSION ("<original>-mod<X>.<Y>": X new features, Y fixes), override: BEWAVE_VERSION
+#                      (the old "<original>-port.<n>" form is still accepted)
+#   original version - the part of the port version before "-mod" (or the legacy "-port")
 #   Electron version - the "Electron/x.y.z" string in original/<original>/win-build/BE WAVE Soft/BE WAVE Soft.exe,
 #                      override: ELECTRON_VERSION
 # Electron zips are never downloaded here: a missing zip prints the download commands and returns 2.
@@ -15,7 +16,7 @@ BW_ELECTRON_RELEASES="https://github.com/electron/electron/releases/download"
 # at startup; 1.1.0 has none of them. The .ico files are read only on win32 and TSH Soft (v*) is not shipped.
 BW_ORIGINAL_RESOURCES="splash.jpg"
 
-# Prints the port version, e.g. 1.1.0-port.3.
+# Prints the port version, e.g. 1.2.0-mod3.0.
 bw_port_version() {
   if [ -n "${BEWAVE_VERSION:-}" ]; then
     printf '%s\n' "$BEWAVE_VERSION"
@@ -25,10 +26,11 @@ bw_port_version() {
   fi
 }
 
-# Prints the original Satel version, e.g. 1.1.0.
+# Prints the original Satel version, e.g. 1.2.0 (from 1.2.0-mod3.0 or the legacy 1.2.0-port.2).
 bw_original_version() {
   local port
   port="$(bw_port_version)"
+  port="${port%%-mod*}"
   printf '%s\n' "${port%%-port*}"
 }
 

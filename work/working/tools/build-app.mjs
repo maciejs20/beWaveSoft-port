@@ -30,12 +30,16 @@ function rendererEntry() {
   return entries[0];
 }
 
+// Our full version: BEWAVE_VERSION or working/VERSION (e.g. "1.2.0-mod3.1"), as bw_port_version in lib-version.sh.
+const working = path.resolve(src, '..');
+const portVersion = process.env.BEWAVE_VERSION || fs.readFileSync(path.join(working, 'VERSION'), 'utf8').trim();
+// Shown in the app (splash, version label) through desktop/shared/modVersion.js; app.getVersion() stays Satel's.
+const kModVersionDefine = { __BEWAVE_MOD_VERSION__: JSON.stringify(portVersion) };
+
 // Satel graphics for the TSH screen editor preview: dist/tsh/ from the original's TSH_soft.exe (never committed).
-// The original version is the part of working/VERSION (or BEWAVE_VERSION) before "-port", as in lib-version.sh.
+// The original version is the part of portVersion before "-mod" (legacy "-port"), as in lib-version.sh.
 function extractOriginalTshAssets() {
-  const working = path.resolve(src, '..');
-  const port = process.env.BEWAVE_VERSION || fs.readFileSync(path.join(working, 'VERSION'), 'utf8').trim();
-  const original = port.split('-port')[0];
+  const original = portVersion.split('-mod')[0].split('-port')[0];
   const resources = path.join(working, '../original', original, 'win-build/BE WAVE Soft/resources');
   const versions = fs.existsSync(resources) ? fs.readdirSync(resources).filter((d) => /^v/.test(d) && fs.existsSync(path.join(resources, d, 'TSH_soft.exe'))) : [];
   if (versions.length !== 1) {
@@ -47,12 +51,12 @@ function extractOriginalTshAssets() {
 await esbuild.build({
   entryPoints: { 'electron.entry': path.join(src, 'main/entry.js'), 'electron.preload': path.join(src, 'preload/preload.js') },
   outdir: dist, bundle: true, platform: 'node', format: 'cjs', packages: 'external',
-  target: kNodeTarget, logLevel: 'warning',
+  target: kNodeTarget, logLevel: 'warning', define: kModVersionDefine,
 });
 await esbuild.build({
   entryPoints: { 'bundle.web': rendererEntry() },
   outdir: dist, bundle: true, platform: 'node', format: 'iife',
-  target: kChromeTarget, logLevel: 'warning', logLimit: 15,
+  target: kChromeTarget, logLevel: 'warning', logLimit: 15, define: kModVersionDefine,
   external: [...NODE_BUILTINS, 'realm', 'mqtt', 'electron'],
   loader: { '.js': 'jsx' }, jsx: 'automatic',
   alias: { 'react/jsx-runtime': path.join(src, 'renderer/lib/react/jsx-runtime.js') },

@@ -1,8 +1,8 @@
 # 25. Grupy panelu bocznego, „Monitoring” w Integracji i „Mój profil” w Użytkownikach
 
-- **Wpisy rejestru:** 041, 042, 058
+- **Wpisy rejestru:** 041, 042, 058, 061
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** 1.2.0-port.2, oryginał 1.2.0; 058 niewydane (po 1.2.0-port.2)
+- **Wprowadzone:** 1.2.0-port.2, oryginał 1.2.0; 058 i 061 w 1.2.0-mod3.1
 - **Wymagania:** decyzje użytkownika z 2026-11-14 (punkty 5, 6, 7 i 9 listy zmian) i z 2026-11-15 (wpis 058: Awarie w Podsumowaniu, grupa „Pozostałe”, zagnieżdżony „Obiekt”)
 
 ## Cel
@@ -13,23 +13,23 @@ Panel boczny ustawień obiektu ma za dużo pozycji w grupie „Ustawienia”, a 
 
 | Grupa (`id`) | Pozycje (kolejność) |
 |---|---|
-| „Podsumowanie” (`summary`, `hub-settings.summary`) | Lista obiektów (`GroupComponent`, przepis 19), Dziennik zdarzeń (`EventLogList`), Awarie (`HubFailures`, tytuł „Awarie: N”, nowa pozycja desktopu, 058) |
+| „Podsumowanie” (`summary`, `hub-settings.summary`) | Lista urządzeń (`GroupComponent`, przepis 19; do wpisu 061 „Lista obiektów”), Dziennik zdarzeń (`EventLogList`), Awarie (`HubFailures`, tytuł „Awarie: N”, nowa pozycja desktopu, 058) |
 | „Konfiguracja” (`configuration`, `device_table.menu_configuration`) | Integracja (`Integrations`), Harmonogramy (`ScheduleList`), Symulacja obecności (`HubPresenceSimulation`), Diagnostyka (`HubDiagnostics`) |
 | „Pozostałe” (`other`, `device_table.menu_other`, domyślnie zwinięta) | Obiekt (`object`, `device_table.menu_object`, ikona `home-wifi`, domyślnie zwinięty) z dziećmi: Ustawienia obiektu (`HubConfiguration`), Edytuj obiekt, Usuń obiekt (na końcu za linią, czerwona ikona, przepis 23); dalej Dane instalatora, Klucz tokenów SATEL (`SatelTokenKey`), Użytkownicy (`HomeUsers`), Ustawienia e-mail (`EmailConfigScreen`), na końcu każda pozycja, której listy nie znają (najpierw z `screen`, potem bez) |
 
 - Do wpisu 058 (stan 1.2.0-port.2) układ był: „Podsumowanie” = Lista obiektów, Dziennik zdarzeń; „Konfiguracja” = Ustawienia obiektu, Harmonogramy, Integracja, Ustawienia e-mail, Użytkownicy, Klucz tokenów, Dane instalatora, Edytuj obiekt, Usuń obiekt; „Ustawienia” (`settings`, `hub-settings.settings`) = Symulacja obecności, Diagnostyka i nieznane pozycje z `screen`. Grupa „Ustawienia” znikła.
 - Znikają z panelu: Zużycie energii (`HubPowerConsumption`), Dane środowiskowe (`HubEnvironmentalData`). Monitoring (`HubMonitoring`) znika tylko, gdy użytkownik ma pozycję Integracja (rola administratora), a Mój profil (`UserProfile`) tylko, gdy ma pozycję Użytkownicy (`UsersConfiguration`): wtedy otwierają się z tych ekranów. Bez pozycji-gospodarza zostają zaraz za jej miejscem (Monitoring w „Konfiguracji” za miejscem Integracji, Mój profil w „Pozostałych” za miejscem Użytkowników), żeby nikt nie stracił dostępu. Grupa „Zarządzanie obiektem” (`hub-settings.object_management`) znika, bo jej pozycje są w „Obiekcie” i „Pozostałych”.
 - Pozycje z `screen` rozpoznawane po `screen`. Pozycje bez `screen` po przetłumaczonym tytule, tak jak buduje je `useHubSettingsMenu`: Dane instalatora (`installer-data.title` dla administratora, `installer-data.help` dla pozostałych), Edytuj obiekt (`hub-settings.edit_object`), Usuń obiekt (`hub-settings.delete_object`).
-- Pozycja „Awarie” (058): dodana w `useHubSettingsMenu` tylko na drodze desktopowej, za „Listą obiektów” (tytuł `device_table.menu_failures_plain` „Awarie”, ikona `danger`, `screen: HubFailures`, `onPress` → `callback(HubFailures)`). `DesktopSideMenu` zamienia tytuł na `device_table.menu_failures` z liczbą awarii i wyróżnia ją przy awariach; zwinięte „Podsumowanie” pokazuje `⚠ N` (przepis 23). Pomarańczowy pasek „Znaleziono awarie” nad panelem jest na desktopie ukryty (`HubAlerts` z `hideFailures`), na ekranie głównym zostaje.
+- Pozycja „Awarie” (058): dodana w `useHubSettingsMenu` tylko na drodze desktopowej, za „Listą urządzeń” (tytuł `device_table.menu_failures_plain` „Awarie”, ikona `danger`, `screen: HubFailures`, `onPress` → `callback(HubFailures)`). `DesktopSideMenu` zamienia tytuł na `device_table.menu_failures` z liczbą awarii i wyróżnia ją przy awariach; zwinięte „Podsumowanie” pokazuje `⚠ N` (przepis 23). Pomarańczowy pasek „Znaleziono awarie” nad panelem jest na desktopie ukryty (`HubAlerts` z `hideFailures`), na ekranie głównym zostaje.
 - Ekran „Integracja” (desktop): na górze wiersz „Monitoring ›” (`hub-settings.monitoring`, `ActionButton` jak pozostałe wiersze), otwiera oryginalny ekran `HubMonitoring` (`navigate`, „Wstecz” wraca do Integracji). Widoczny przy uprawnieniu pozycji menu: `permissionGuard.MonitoringConfiguration === ResourceAccess.Full`.
 - Ekran „Użytkownicy” (desktop): nad zakładkami wiersz „Mój profil ›” (`hub-settings.my_profile`), otwiera `UserProfile`. Uprawnienie jak pozycja menu: `permissionGuard.None === ResourceAccess.Full`.
-- Telefon, tablet i okno < 900 px: menu z `useHubSettingsMenu` bez zmian (pozycje „Lista obiektów” i „Awarie” są tylko w gałęzi `isDesktopEditor()`), pasek awarii nad menu jest, ekrany Integracji i Użytkowników bez nowych wierszy.
+- Telefon, tablet i okno < 900 px: menu z `useHubSettingsMenu` bez zmian (pozycje „Lista urządzeń” i „Awarie” są tylko w gałęzi `isDesktopEditor()`), pasek awarii nad menu jest, ekrany Integracji i Użytkowników bez nowych wierszy.
 
 ## Punkty zaczepienia
 - `useHubSettingsMenu` (eksport): `groups: [{ info: { title }, items: [{ title, leftIcon, screen, onPress, hasPermission }] }]`; pozycje filtrowane przez `hasPermission` na końcu hooka.
 - Nazwy ekranów `ScreenName.HubPowerConsumption`, `HubEnvironmentalData`, `HubMonitoring`, `UserProfile`, `GroupComponent`, `EventLogList`, `HubFailures`, `HubConfiguration`, `HubEdit`, `ScheduleList`, `Integrations`, `EmailConfigScreen`, `HomeUsers`, `SatelTokenKey`, `HubPresenceSimulation`, `HubDiagnostics`.
 - Klucze tytułów pozycji bez `screen`: `installer-data.title`, `installer-data.help`, `hub-settings.edit_object`, `hub-settings.delete_object`.
-- Pozycja „Lista obiektów” w `useHubSettingsMenu` (`title: r("device_table.menu")`, `forceTable: true`, przepis 19): za nią w tej samej gałęzi desktopowej pozycja „Awarie” (058).
+- Pozycja „Lista urządzeń” (dawniej „Lista obiektów”) w `useHubSettingsMenu` (`title: r("device_table.menu")`, `forceTable: true`, przepis 19): za nią w tej samej gałęzi desktopowej pozycja „Awarie” (058).
 - `IntegrationsScreen` (eksport; w 1.2.0 `logic/IntegrationsScreen.js`): `<module32.Page title={A("hub-settings.integrations")} … isModal={PlatformConstants.isWeb}>{… hasMqtt && <ActionButton …`.
 - `HubUsersScreen` (eksport; `screens/HubUsersScreen.js`): `marginBottomByScreenType={…PageWithNavigationBar}><TabsListSelector.TabsList`.
 - `usePermissionGuard` (eksport `usePermissionGuard`, `ResourceAccess`), `useAppNavigation` (w 1.2.0 `misc/module_21.js`).
@@ -44,7 +44,7 @@ Panel boczny ustawień obiektu ma za dużo pozycji w grupie „Ustawienia”, a 
 5. i18n w bloku `device_table`: `menu_configuration` („Konfiguracja” / „Configuration”); od 058 `menu_failures` („Awarie: {{failuresCount}}” / „Faults: {{failuresCount}}”), `menu_failures_plain` („Awarie” / „Faults”), `menu_other` („Pozostałe” / „Other”), `menu_object` („Obiekt” / „Object”).
 
 ## Zależności
-Przepisy 08 i 23 (`DesktopSideMenu`); 19 dla pozycji „Lista obiektów” (bez niej „Podsumowanie” ma sam dziennik).
+Przepisy 08 i 23 (`DesktopSideMenu`); 19 dla pozycji „Lista urządzeń” (bez niej „Podsumowanie” ma sam dziennik).
 
 ## Sprawdzenie
 - `npm --prefix work/working/tools test` (`test/unit/desktop/desktopMenuGroups.test.js`, przepisany przy 058: trzy grupy z zagnieżdżonym „Obiektem”, ikona „Obiektu” i „Usuń obiekt” na końcu, Dane instalatora po tytule `installer-data.help`, nieznane pozycje na końcu „Pozostałych”, pozycje bez uprawnień, pusty „Obiekt” i puste grupy pominięte, Monitoring i Mój profil bez pozycji-gospodarza, przekazanie oryginalnych obiektów pozycji).

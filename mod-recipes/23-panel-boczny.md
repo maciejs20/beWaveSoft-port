@@ -2,7 +2,7 @@
 
 - **Wpisy rejestru:** 029, 058 (wygląd nagłówków, zagnieżdżony „Obiekt”, domyślne zwinięcie, licznik awarii; układ grup z wpisów 041 i 058: przepis 25)
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** 1.1.0-port.2 (commit `5a50186`); 058 niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.1.0-port.2 (commit `5a50186`); 058 w 1.2.0-mod3.1, oryginał 1.2.0
 - **Wymagania:** 15 („Panel boczny: zwijane sekcje i oddzielenie »Usuń obiekt«”)
 
 > **Od wpisu 041** panel nie pokazuje grup z `useHubSettingsMenu` wprost, tylko grupy z `desktopMenuGroups.desktopGroups` (przepis 25). Stan zwinięcia jest zapisywany po stałym `id` zamiast po tytule, pod tym samym kluczem `sideMenu.collapsed`; stare wpisy po tytułach są ignorowane.

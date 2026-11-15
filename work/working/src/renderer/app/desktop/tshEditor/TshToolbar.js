@@ -1,5 +1,5 @@
-// Toolbar of the TSH screens editor (docs/plans/2026-11-14-tsh-editor-redesign.md 3.3), left to right: keypad model and
-// resolution, undo/redo, the add-widget menu (props.addMenu), the editor grid toggle, zoom (-, level menu, +), "Karta
+// Toolbar of the TSH screens editor (docs/plans/2026-11-14-tsh-editor-redesign.md 3.3), left to right: the BETA badge
+// (shown at every width, its tooltip asks for a backup), keypad model and resolution, undo/redo, the add-widget menu (props.addMenu), the editor grid toggle, zoom (-, level menu, +), "Karta
 // SD", the byte budget meter, the shortcut list "?", then Cancel and Save with a badge that lists validation errors
 // (a click on one selects what it names) and notes. Narrow toolbars drop button labels, then the model label.
 // Props:
@@ -94,6 +94,27 @@ var styles = {
     paddingHorizontal: 12,
     paddingVertical: 6
   }
+};
+// "BETA" badge at the start of the toolbar: the editor works but is not yet sufficiently tested. Returns the element.
+var BetaBadge = function (props) {
+  var t = props.t;
+  return <span role="note" title={t("tsh_editor.beta_hint")} aria-label={t("tsh_editor.beta_hint")} style={{
+    display: "inline-flex",
+    alignItems: "center",
+    height: 20,
+    padding: "0 8px",
+    marginRight: 4,
+    borderRadius: 10,
+    border: `1px solid ${Color.warning500}`,
+    backgroundColor: Color.warning100,
+    color: Color.warning800,
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: 0.5,
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+    cursor: "help"
+  }}>{t("tsh_editor.beta")}</span>;
 };
 // Shortcut list of the "?" popover: key label and i18n key of the description.
 var SHORTCUTS = [["click", "help.click"], ["alt_click", "help.alt_click"], ["drag", "help.drag"], ["alt_drag",
@@ -245,7 +266,7 @@ exports.TshToolbar = function (props) {
   var label = function (key) {
     return compact ? undefined : t(key);
   };
-  return <View ref={measured[0]} style={styles.bar} accessibilityRole="toolbar">{!tiny && <module28.Text style={styles.model} numberOfLines={1}>{props.model}</module28.Text>}{!tiny && <View style={styles.separator} />}<View style={styles.group}><TshUi.ToolButton icon="undo" title={t("tsh_editor.undo")} disabled={!props.canUndo} onClick={props.onUndo} /><TshUi.ToolButton icon="redo" title={t("tsh_editor.redo")} disabled={!props.canRedo} onClick={props.onRedo} /></View>{props.addMenu && <View style={styles.separator} />}{props.addMenu && props.addMenu(compact)}<View style={styles.separator} /><TshUi.ToolButton icon="grid" label={label("tsh_editor.editor_grid")} title={t("tsh_editor.editor_grid_hint")} on={props.grid} onClick={props.onGrid} /><View style={styles.separator} /><ZoomControl t={t} zoom={props.zoom} zoomMode={props.zoomMode} fit={props.fit} onZoom={props.onZoom} /><View style={styles.separator} /><TshUi.ToolButton icon="sd" label={label("tsh_editor.sd.button")} title={t("tsh_editor.sd.button")} onClick={props.onSd} /><View style={styles.separator} /><BudgetMeter t={t} size={props.size} limit={props.limit} width={compact ? 64 : 120} /><View style={styles.spacer} /><HelpButton t={t} /><View style={styles.separator} /><ProblemsBadge t={t} errors={props.errors} notes={props.notes} /><TshUi.ToolButton label={t("cancel")} onClick={props.onCancel} style={{
+  return <View ref={measured[0]} style={styles.bar} accessibilityRole="toolbar"><BetaBadge t={t} />{!tiny && <module28.Text style={styles.model} numberOfLines={1}>{props.model}</module28.Text>}{!tiny && <View style={styles.separator} />}<View style={styles.group}><TshUi.ToolButton icon="undo" title={t("tsh_editor.undo")} disabled={!props.canUndo} onClick={props.onUndo} /><TshUi.ToolButton icon="redo" title={t("tsh_editor.redo")} disabled={!props.canRedo} onClick={props.onRedo} /></View>{props.addMenu && <View style={styles.separator} />}{props.addMenu && props.addMenu(compact)}<View style={styles.separator} /><TshUi.ToolButton icon="grid" label={label("tsh_editor.editor_grid")} title={t("tsh_editor.editor_grid_hint")} on={props.grid} onClick={props.onGrid} /><View style={styles.separator} /><ZoomControl t={t} zoom={props.zoom} zoomMode={props.zoomMode} fit={props.fit} onZoom={props.onZoom} /><View style={styles.separator} /><TshUi.ToolButton icon="sd" label={label("tsh_editor.sd.button")} title={t("tsh_editor.sd.button")} onClick={props.onSd} /><View style={styles.separator} /><BudgetMeter t={t} size={props.size} limit={props.limit} width={compact ? 64 : 120} /><View style={styles.spacer} /><HelpButton t={t} /><View style={styles.separator} /><ProblemsBadge t={t} errors={props.errors} notes={props.notes} /><TshUi.ToolButton label={t("cancel")} onClick={props.onCancel} style={{
       marginRight: 8
     }} /><TshUi.ToolButton variant="primary" label={t("common.save")} disabled={!props.canSave} onClick={props.onSave} /></View>;
 };

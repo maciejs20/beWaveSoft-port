@@ -1178,7 +1178,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 044. Edytor TSH: metryki podglądu z tabeli TSH Soft (TSH2 i TSG2)
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, RC1: na INT-TSG2 podgląd brał połowę rozmiarów TSH2 (ikona dużej wielkości 114 px zamiast 84, tekst mały 9 px zamiast 12), a TSH2 średnie i duże rozmiary ×2/×3. Rozmiary są teraz z tabeli TSH Soft (`FUN_00ab0cd4`) i stałych paska stanu (`FUN_00aa7fe4`), opis w `PROJEKT-TSH.md` 2.6. Rozszerza wpis 036; kod Satel bez zmian.
 - **Plik nowy (kopiuj bez zmian):** `desktop/tshEditor/tshMetrics.js`: `TSH2_METRICS`, `TSG2_METRICS` (zamrożone), `metricsFor(width, height)` (tabela TSG2 dla szerokości ≤ 800 jak w TSH, inaczej TSH2; zwraca nowy obiekt z `width`, `height`), `TSG2_MAX_WIDTH = 800`; test `test/unit/tshEditor/tshMetrics.test.js`.
 - **Wartości:** TSH2 tekst `[18, 33, 54]`, ikona `[77, 115, 180]`, wskaźnik `[20, 36, 52]`, pasek 52, nazwa i zegar 26 px od y 10, ikona użytkownika 30 px w `(W − 60, 7)`, zegar kończy się na `W − 90`, ikony stanu 40 px od x 4 co 60, y 4, kropki 12 px + 2, siatka margines 20, zegar wygaszacza 256 / sekundy 77, `unknownBox` 48, `snapDistance` 10. TSG2 tekst `[12, 15, 25]`, ikona `[36, 54, 84]`, wskaźnik `[10, 16, 24]`, pasek 26, 13 px od y 7, ikona użytkownika 15 px, ikony stanu 20 px co 30 (rysowane dopiero zgodnie z wpisem 045), kropki 6 + 2, zegar 120 / 36, `unknownBox` 24, `snapDistance` 5.
@@ -1192,7 +1192,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 045. Edytor TSH: krój, wyrównanie, ikony, wskaźniki, pasek stanu i zegar wygaszacza jak w TSH Soft
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, RC2, RC7, RC10, RC11 i reguły rysowania odczytane z `TSH_soft.exe` (`PROJEKT-TSH.md` 2.6: `FUN_00a9f9d0`, `FUN_00a9f048`, `FUN_00a9f3a8`, `FUN_00a9f704`, `FUN_00a5b270`, `FUN_00aa7fe4`, `FUN_00aa064c`). Rozszerza wpisy 036 i 044; kod Satel bez zmian.
 - **Plik:** `desktop/tshEditor/tshLayout.js` (nasz, kopiuj bez zmian)
   - **Tekst:** tablica szerokości Roboto Thin `ADVANCES_THIN` (te same znaki co `MEASURED_CHARS`, `hmtx` czcionki ROBT), `textWidth(text, px, face)` z `face` `"light"` (domyślnie) albo `"thin"`; `widgetLayout` dla tekstu daje `face: "thin"`, gdy rozmiar równa się `m.font[2]`, i `textX: TEXT_OFFSET` (1 px, TSH rysuje tekst w `lewa + 1`). `textAscent(px) = round(1946·px/2048)` (linia bazowa GDI), stałe `ROBOTO_HHEA_ASCENT = 1900`, `ROBOTO_HHEA_HEIGHT = 2400`, `BOLD_EXTRA_ADVANCE = 1`.
@@ -1211,7 +1211,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 046. Edytor TSH: data w widżecie Data/czas jak w TSH Soft
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, RC6: format `dddd, d MMMM yyyy` dawał „1414, d 1111 2026”, bo podgląd znał tylko `yyyy yy MM dd hh HH mm ss` z rozróżnieniem wielkości liter. TSH (`FUN_00a9cc5c`, `PROJEKT-TSH.md` 2.6) najpierw zamienia w formacie `dddddd`, `ddddd`, `mm` → `nn`, `m` → `n`, `tt`, `t`, `c`, potem woła Delphi `FormatDateTime`, a po polsku zamienia mianownik miesiąca na dopełniacz. Rozszerza wpis 036; kod Satel bez zmian.
 - **Plik nowy (kopiuj bez zmian):** `desktop/tshEditor/tshDateFormat.js`: `formatTshDate(format, date, lang)`, `TSH_REPLACEMENTS` (kolejność jak w TSH, każda zamiana na całym tekście od lewej, bez ponownego skanowania, także w cudzysłowach), `LOCALES` (`pl`, `en`: nazwy dni i miesięcy, separatory `.`/`/` i `:`, formaty krótkie i długie, AM/PM). Tokeny Delphi bez rozróżnienia wielkości liter, ale seria liczy tylko ten sam znak; `M` zaraz po tokenie `H` to minuty; `y`, `yy` → 2 cyfry, więcej → 4; `d`, `dd`, `ddd`, `dddd`; `M`…`MMMM`; `h`, `hh` (12 h przy `AM/PM`, `A/P`, `AMPM` dalej w formacie); `n`, `nn`, `s`, `ss`, `z`, `zzz`; `AAAA`, `AAA`; `/`, `:`; literały w `'…'` i `"…"`; inne znaki bez zmian. Po polsku (`lang` „pl” bez względu na wielkość liter) pierwsza znaleziona mianownikowa nazwa miesiąca zamieniana na dopełniacz z tabeli TSH; inne języki po angielsku. Test `test/unit/tshEditor/tshDateFormat.test.js`.
 - **Plik:** `desktop/tshEditor/tshLayout.js` (nasz)
@@ -1223,7 +1223,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 047. Edytor TSH: kliknięcie nie przesuwa widżetu, trafianie przez ramki, przyciąganie tylko przy przeciąganiu
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, RC3–RC5 (zgłoszenie z INT-TSG2): samo kliknięcie przesuwało widżet (przycisk 84,211 → 84,158, drganie 1–3 px myszy dawało ruch, a `dragPosition` wciskał całą ramkę w ekran i zapisywał to przy puszczeniu), prostokąt-ramka nad przyciskami przechwytywał ich kliknięcia, przyciąganie działało przy każdym ruchu i zależało od zapisanej flagi „Siatka” ekranu. Rozszerza wpisy 036 i 044; kod Satel bez zmian.
 - **Podział podglądu (refaktor zadania 6, bez osobnego wpisu, kopiuj bez zmian):** `desktop/tshEditor/TshScreenRender.js` (statyczne rysowanie ekranu bez obsługi zdarzeń, `react.memo` na `screen`, `scale`, `themes`, `customImages`, `now`, `lang`; przeniesione `Glyph`, `textStyle`, `WidgetContent`, `StatusBar`, `Saver`, `Grid`), `tshLayout.screenDrawList(state, screen, opts)` (lista elementów w kolejności rysowania: `background`, `grid`, `statusBar`, `dots`, `saver`, `widget` z `layout` i `colors`; test `tshScreenRender.test.js`), `desktop/tshEditor/TshCanvas.js` (dawny `TshPreview`: skala, zaznaczenie, wskaźnik), `TshPreview.js` tylko jako `exports.TshPreview = require("./TshCanvas.js").TshCanvas;` do czasu nowej powłoki edytora (zadanie 9).
 - **Plik nowy (kopiuj bez zmian):** `desktop/tshEditor/tshPointer.js`: `DRAG_THRESHOLD_PX = 4`, `SNAP_PX = 6`, `RECT_EDGE_PX = 4` (piksele CSS); `toKeypad(clientX, clientY, stageRect, zoom)` (z bieżącego `getBoundingClientRect()` sceny); `passedThreshold(start, point)` (`dx² + dy² >= 16`); `hitTest(layouts, point, zoom, cycleFrom)` (od wierzchu; wnętrze prostokąta dalej niż `max(border, 4 / zoom)` od krawędzi ustępuje innemu widżetowi pod kursorem, zewnętrzna połowa pióra też trafia; `cycleFrom` przy Alt daje następny widżet pod kursorem); `dragAnchor(grab, point, layout, m, { snap, zoom })` (kotwica = kursor − chwyt, przy `snap` krawędzie i środek ramki do `TshLayout.snapTargets(m)` w promieniu `6 / zoom`, potem zaokrąglenie i przycięcie tylko kotwicy do `0…W−1`, `0…H−1`; zwraca `{ x, y, guides }`); `nudgeAnchor(w, delta, m)`; `IDLE` i `pointerReducer(state, event)` (zdarzenia `down`, `move`, `up`, `cancel`, `key`: przeciąganie dopiero po progu, `up` zwraca `commit` tylko po przeciągnięciu, które zmieniło X/Y, Esc i `cancel` bez zapisu). Test `test/unit/tshEditor/tshPointer.test.js`.
@@ -1240,7 +1240,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 048. Edytor TSH: cofanie i ponawianie, Delete z pytaniem, skróty klawiszowe
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, zadanie 8 i sekcja 5 („History”, „Keyboard on the focused canvas”): edytor nie miał cofania, a usunięcie widżetu było tylko z listy. Rozszerza wpisy 035 i 047; kod Satel bez zmian.
 - **Plik nowy (kopiuj bez zmian):** `desktop/tshEditor/tshHistory.js`: `HISTORY_LIMIT = 100`, `COALESCE_MS = 1000`; `createHistory(state)` → `{ past: [], present, future: [], key: null, at: 0 }`; `record(h, next, key, at)` (ten sam niepusty klucz w ciągu ≤ 1000 ms zastępuje `present` zamiast dodawać krok; każdy zapis czyści `future`; `past` przycinane do 100 od najstarszego; `next === present` nic nie zmienia); `undo(h)`, `redo(h)` (zerują klucz, więc kolejna zmiana nie łączy się z krokiem z cofania); `clampSelection(state, { uid, widget })` (brak ekranu → pierwszy ekran użytkownika albo `null`, brak widżetu → `widget: null`); `shortcutFor(event)`: Ctrl/Cmd+Z `undo`, Ctrl/Cmd+Shift+Z i Ctrl/Cmd+Y `redo`, Delete/Backspace `delete`, G `grid`, Tab / Shift+Tab `nextWidget` / `prevWidget`, Ctrl/Cmd `=`/`+`/`-`/`0`/`1` `zoomIn`/`zoomOut`/`zoomFit`/`zoomActual` (obsługa w zadaniu 9); `event.metaKey || event.ctrlKey` bez warunku na platformę; Ctrl+Alt, Ctrl+Shift+Y i każdy klawisz w `INPUT`/`SELECT`/`TEXTAREA` albo elemencie `contentEditable` → `null`. Test `test/unit/tshEditor/tshHistory.test.js`.
 - **Plik:** `desktop/tshEditor/TshEditorRoute.js` (nasz)
@@ -1253,7 +1253,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 049. Edytor TSH: układ na całe okno z paskiem narzędzi, powiększeniem i licznikiem danych
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, zadanie 9 i sekcje 3.1–3.3 (RC12, zgłoszenie z INT-TSG2): mały podgląd i dużo pustego miejsca, duży przycisk „Zapisz” w stopce `Page`, panel właściwości ucięty pod stopką, rozmiar danych i „Karta SD”/„Anuluj” w jednym wierszu nad kolumnami. Rozszerza wpisy 035, 036, 047 i 048; kod Satel bez zmian.
 - **Pliki nowe (kopiuj bez zmian):**
   - `desktop/tshEditor/tshZoom.js`: `ZOOM_LEVELS = [0.5, 0.75, 1, 1.5, 2, 3, 4]`, `MIN_ZOOM = 0.05`; `fitZoom(pane, m, padding)` → `min((W − 2p) / m.width, (H − 2p) / m.height)` w granicach `MIN_ZOOM…4`; `stepZoom(current, dir)` → najbliższy poziom w danym kierunku (z dopasowania też), na końcach koniec; `zoomAround(scroll, point, from, to)` → `(scroll + point) · to / from − point` (przewinięcie liczone od początku sceny; wywołujący dodaje przesunięcie sceny po zmianie). Test `test/unit/tshEditor/tshZoom.test.js`.
@@ -1274,7 +1274,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 050. Edytor TSH: ekrany z miniaturami i lista warstw z ikonami i nazwami
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, zadanie 10 i sekcja 3.3 „Left panel” (RC9, RC13): ekran o nazwie z samych spacji miał w liście pusty wiersz (tylko linia z typem), widżety były na liście jako „Typ · x, y” bez ikony i treści (dwa „Tekst” nie do odróżnienia), lista widżetów siedziała w panelu właściwości, nie było zmiany kolejności widżetów. Rozszerza wpisy 035, 048 i 049; kod Satel bez zmian.
 - **Pliki nowe (kopiuj bez zmian):**
   - `desktop/tshEditor/tshWidgetLabel.js`: `MAX_LABEL_LENGTH = 32`; `hasVisibleText(text)` (`/[^\s\u0000-\u001f​-‍﻿]/`); `widgetLabel(w, state, t)` → `{ glyph, glyphKind: "icon"|"text"|"rect"|"dot", title, subtitle, named }`: tekst i informacja `„tekst”` (`tsh_editor.quoted`, obcięty do 32 znaków z „…”), data/czas format, wartość „urządzenie · nazwa wartości”, sterowanie/przycisk/ikony/wskaźniki/stan wyjścia (tekst) nazwa urządzenia, stan pomieszczenia pomieszczenie, sceny nazwa sceny, czuwanie tryb czuwania, napad rodzaj alarmu, odsyłacz „Powrót” albo tytuł ekranu dodatkowego, prostokąt „Prostokąt W×H”, nieobsługiwany „Nieobsługiwany”; bez nazwy (brak urządzenia, pusty tekst) tytułem jest nazwa typu i `named: false`; `glyph` to `TshLayout.widgetGlyph(TshLayout.widgetIcon(w))` dla widżetów z ikoną. `screenTitle(entry, index, t)`: nazwa z widocznym znakiem bez zmian, inaczej „Ekran {n} (bez nazwy)” / „Ekran dodatkowy {n} (bez nazwy)” (n = pozycja w typie), motyw i wygaszacz nazwą typu, rekord nieobsługiwany „Nieobsługiwany ekran {id}”. Test `test/unit/tshEditor/tshWidgetLabel.test.js`.
@@ -1293,7 +1293,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 051. Edytor TSH: inspektor z sekcjami i przewijaniem, wybór ikon z podglądem, menu „+ Widżet”
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** plan `docs/plans/2026-11-14-tsh-editor-redesign.md`, zadanie 11 i sekcja 3.3 „Inspector”, „Icon picker”, „Toolbar” (RC12, RC13): długi panel właściwości bez podziału, ikona jako kod `0x11d` z przyciskiem „Wybierz” i siatką wszystkich glifów czcionki (także tych, których klawiatura nie rysuje), dodawanie widżetu z listy rozwijanej w panelu, nowy widżet w miejscu domyślnym TSH. Rozszerza wpisy 035, 049 i 050; kod Satel bez zmian.
 - **Pliki nowe (kopiuj bez zmian):**
   - `desktop/tshEditor/tshWidgetGroups.js`: `WIDGET_GROUPS` (klucz i typy): `text` [0x00, 0x05, 0x30, 0x16], `control` [0x08, 0x27, 0x06, 0x07], `alarm` [0x33, 0x34, 0x36, 0x37, 0x23], `indicators` [0x01, 0x02, 0x03], `navigation` [0x25, 0x31, 0x35], `shapes` [0x17, 0x24]; `widgetGroups(t)` → `[{ key, items: [{ type, key, glyph, glyphKind }] }]` z glifem widżetu z `TshTemplates.newWidget`. Test `test/unit/tshEditor/tshWidgetGroups.test.js`.
@@ -1314,7 +1314,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 052. Edytor TSH: wciśnięcie puszczone poza sceną nie zostaje „wciśnięte”, puste teksty da się kliknąć, Shift+klik jak Alt+klik
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** przegląd przebudowy (I1, M2, M3, M7). Scena brała wskaźnik dopiero po progu 4 px, więc wciśnięcie widżetu przy krawędzi puszczone kawałek poza sceną zostawało w stanie „pressed”, a późniejsze wciśnięcie gdzie indziej przeciągnięte nad scenę przesuwało stary widżet (np. przycisk 84,211 → 284,43), także po zmianie ekranu. Tekst lub Data/czas z pustą treścią miały ramkę szerokości 0 (przy dopasowaniu mniej niż 1 px CSS), kropka pokazanego ekranu znikała w czasie przeciągania, a Alt+klik przechwytują niektóre menedżery okien Linuksa (Xfce, MATE, Cinnamon). Rozszerza wpisy 047 i 049; kod Satel bez zmian.
 - **Plik:** `desktop/tshEditor/tshPointer.js` (nasz)
   - **Przed:** `pointerReducer` bez identyfikatora wskaźnika; `"move"` sprawdzał tylko `state.phase === "idle" || !state.movable || …próg`; trafienie `right = l.left + Math.max(l.width, 1) + pen`.
@@ -1330,7 +1330,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 053. Edytor TSH: Esc anuluje pytanie, skróty czekają na odpowiedź i koniec przeciągania, zaznaczenie po cofnięciu kolejności
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** przegląd przebudowy (I2, I3, M5, M6). Okno pytania aplikacji (`logic/showConfirmDialog.js`) nie obsługuje Esc: Esc przy pytaniu „Usunąć widżet…?” trafiał do `Page`, który przy niezapisanych zmianach pokazywał „Opuścić ekran?” w miejsce pytania; odpowiedź pierwszego pytania ginęła, flaga `deletingRef` zostawała ustawiona i Delete, Backspace, „Usuń” w menu warstwy i „Usuń widżet” przestawały działać do zamknięcia edytora. Ctrl+Z, G i powiększenie działały za pytaniem i w czasie przeciągania (cofnięcie zmiany kolejności przy pytaniu usuwało inny widżet niż nazwany, cofnięcie w trakcie przeciągania dawało widmo widżetu i błąd przy puszczeniu). Cofnięcie „Na wierzch” zostawiało zaznaczenie na starym indeksie, czyli na innym widżecie; Backspace i G działały na przyciskach okienek (menu, wybór ikon). Rozszerza wpisy 048 i 050; kod Satel bez zmian.
 - **Plik nowy (kopiuj bez zmian):** `desktop/tshEditor/tshAsk.js`: `createAsker({ confirm, hide, target, inEditor })` → `{ ask(title, text, ok, cancel), pending(), dismiss() }`. Przy otwartym pytaniu nasłuch `keydown` i `pointerdown` na `target` w fazie przechwytywania: Esc → `preventDefault()`, `stopPropagation()`, `hide()` i odpowiedź `false` (Esc nie dochodzi do `Page`); wciśnięcie w elemencie edytora (`inEditor(node)`, nakładka okna pytania zakrywa całe okno, więc taki klik znaczy, że inne okno zastąpiło pytanie) → `false`; nowe pytanie odpowiada `false` poprzedniemu; `dismiss()` przy zamknięciu edytora. Test `test/unit/tshEditor/tshAsk.test.js`.
 - **Plik:** `desktop/tshEditor/TshEditorRoute.js` (nasz)
@@ -1350,7 +1350,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 054. Edytor TSH: klawiatura w menu wierszy list, Esc w polu inspektora kończy edycję
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** przegląd przebudowy (M1, M4). Obsługa klawiszy wiersza warstwy łapała Enter, spację i strzałki z jego przycisku „…” i z menu (okienko to portal, a zdarzenia React przechodzą przez portal do wiersza): Enter na „…” nie otwierał menu, Enter na „Na wierzch” tylko zaznaczał wiersz, strzałki w menu przenosiły zaznaczenie na inny wiersz; strzałki w menu wiersza ekranu zmieniały ekran. Esc w polu inspektora (np. nazwa) dochodził do `Page` i zamykał edytor albo pytał o wyjście. Rozszerza wpisy 050 i 051; kod Satel bez zmian.
 - **Plik:** `desktop/tshEditor/TshLayerList.js` (nasz), `onKeyDown` wiersza
   - **Przed:** `}} onKeyDown={function (event) { if (event.key === "ArrowDown" && index …`
@@ -1365,7 +1365,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 055. Tabela obiektów i tabela awarii: stan urządzeń ze strumienia stanów zamiast z Realm
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** błąd po przeniesieniu na 1.2.0. Tabela czytała `device.state` ze struktury z Realm (`hub.structure.tree(data, t).rooms`), a 1.2.0 nie zapisuje już stanu urządzeń w Realm: schemat `schemaRoomsDevices` w `logic/HubMapping.js` nie ma pola `state`, stany są w `deviceStatesSubject` (`logic/stageStructureStatesHub.js`, `BehaviorSubject` z `Map` po `GetDeviceKey(key)`). Skutek: puste kolumny Obwód, Stan, Usterki, Sygnał, Zasilanie i Blokada, filtry „Z usterkami”, „Naruszone”, „Sabotaż/maskowanie” i „Zablokowane” nigdy nic nie znajdowały, a podział na „Wyjścia” (opcje `SET_ON_OFF`/`SET_OPEN_CLOSE` ze stanu) był zły. Tabela awarii (wpis 027) bierze wiersze z tego samego `useDeviceRows`, więc też miała puste usterki, sygnał i zasilanie. Przepisy 19 i 21; kod Satel bez zmian.
 - **Plik:** `desktop/deviceTable/useDeviceRows.js` (nasz)
   - **Przed:**
@@ -1451,7 +1451,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 056. Tabela obiektów: kolumny Moduł i Wartość, filtr typów, ukrywanie pustych kolumn, szukanie nad tabelą
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** decyzja użytkownika z 2026-11-15: przy wielu ekspanderach nie widać, w którym module jest wejście lub wyjście; potrzebna wartość rezystancji wejść, szybkie zawężenie do typu urządzenia i mniej pustych kolumn. W kolumnie „Moduł” bez numeru systemowego modułu (decyzja użytkownika). Przepis 19; kod Satel bez zmian.
 - **Plik:** `desktop/deviceTable/deviceTableModel.js` (nasz)
   - **Przed:** wiersz z `deviceType: (0, ShowDeviceIsArmingWarningModal.GetDeviceName)(device.type) ?? "",`, bez pól modułu i wartości; `exports.matchesQuery` z `` normalize(`${row.name} ${row.room}`) ``; eksporty `isBlocked`, `matchesQuery`, `sortRows`, `buildRows`, `classifyDevice`.
@@ -1516,7 +1516,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 057. Szczegóły urządzenia otwarte z tabeli: X i Esc wracają do tabeli
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** X w szczegółach urządzenia otwartych z tabeli obiektów albo z tabeli awarii zamykał cały stos modali (ekran główny), więc trzeba było od nowa otwierać tabelę. `Esc` wracał do tabeli obiektów tylko dzięki nasłuchowi z wpisu 024, a z tabeli awarii zamykał wszystko. Przepisy 19 i 21.
 - **Plik nowy (kopiuj bez zmian):** `desktop/shared/tableDetailsClose.js`: `TABLE_SCREENS = [ScreenName.GroupComponent, ScreenName.HubFailures]` i `returnsToTable(state)`: `true`, gdy w tym nawigatorze trasa tuż pod bieżącą (`state.routes[state.index - 1].name`) to jedna z `TABLE_SCREENS`.
 - **Plik:** `screens/DeviceDashboardScreen.js` (Satel)
@@ -1561,7 +1561,7 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 
 ### 058. Panel boczny: „Awarie” w Podsumowaniu, nowa grupa „Pozostałe” z zagnieżdżonym „Obiektem”
 - **Platformy:** Linux, macOS (droga desktopowa)
-- **Wprowadzone:** niewydane (po 1.2.0-port.2), oryginał 1.2.0
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
 - **Powód:** decyzja użytkownika z 2026-11-15: w „Konfiguracji” tylko pozycje używane przy konfiguracji (Integracja, Harmonogramy, Symulacja obecności, Diagnostyka), rzadkie ustawienia w zwiniętej grupie „Pozostałe”, ustawienia obiektu razem z edycją i usuwaniem, a awarie jako stała pozycja panelu zamiast pomarańczowego paska nad menu. Zastępuje układ grup z wpisu 041; mechanizm z wpisów 029 i 041 bez zmian. Przepisy 23 i 25.
 - **Plik:** `desktop/shared/desktopMenuGroups.js` (nasz)
   - **Przed:**
@@ -1706,3 +1706,200 @@ Wersja bazowa wszystkich wpisów: 1.2.0. Wpisy 001–031 powstały na 1.1.0 i w 
 - **Pliki:** `i18n/pl.js`, `i18n/en.js`, blok `device_table`, za kluczami z wpisu 056: `"menu_failures": "Awarie: {{failuresCount}}"` / `"Faults: {{failuresCount}}"`, `"menu_failures_plain": "Awarie"` / `"Faults"`, `"menu_other": "Pozostałe"` / `"Other"`, `"menu_object": "Obiekt"` / `"Object"`.
 - **Test:** `test/unit/desktop/desktopMenuGroups.test.js` (przepisany): trzy grupy z zagnieżdżonym „Obiektem”, ikona „Obiektu” i „Usuń obiekt” na końcu, Dane instalatora także po tytule `installer-data.help`, nieznane pozycje na końcu „Pozostałych” (z `screen` najpierw), pozycje bez uprawnień, pusty „Obiekt” i puste grupy pominięte, Monitoring i Mój profil bez pozycji-gospodarza, przekazanie oryginalnych obiektów pozycji.
 - **Sprawdzenie:** `npm --prefix work/working/tools test`. Okno ≥ 900 px, konto administratora: grupy Podsumowanie (Lista obiektów, Dziennik zdarzeń, „Awarie: N”), Konfiguracja (Integracja, Harmonogramy, Symulacja obecności, Diagnostyka), Pozostałe zwinięte; po rozwinięciu „Obiekt” (zwinięty), Dane instalatora, Klucz tokenów SATEL, Użytkownicy, Ustawienia e-mail; w „Obiekcie” Ustawienia obiektu, Edytuj obiekt i „Usuń obiekt” z czerwoną ikoną za linią (**nie klikać**). „Awarie” otwiera listę awarii, przy awariach pozycja wyróżniona, a zwinięta grupa ma `⚠ N`. Nad panelem brak pomarańczowego paska awarii, na ekranie głównym pasek jest. Wejście w Ustawienia obiektu rozwija „Pozostałe” i „Obiekt”. Okno < 900 px: oryginalne menu i pasek awarii.
+
+### 059. Tabela obiektów: nowe układy kolumn, Moduł zaraz za Pomieszczeniem, Sposób działania także w wąskim oknie
+- **Platformy:** Linux, macOS (droga desktopowa)
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
+- **Powód:** uwagi użytkownika po teście 9a05418 na centrali: w wąskim oknie na Wejściach i Wyjściach brakowało kolumny Moduł, Moduł ma stać zaraz za Pomieszczeniem, a w wąskim oknie na Wyjściach brakowało „Sposobu działania”. Angielski nagłówek „Reaction” mylił się z reakcją wejścia. Przepis 19.
+- **Plik:** `desktop/deviceTable/deviceTableModel.js` (nasz)
+  - **Przed:** układy jako pary `[klucz, szerokość]` w `DeviceTableScreen.js` (`WIDE`, `MEDIUM`, `NARROW`, `COMMON_END`, `MEDIUM_END`, osobno `nameWidth` 240/190/140), np. `NARROW.input = [["room", 110], ["channel", 50], ["circuit", 76], ["reaction", 120], ["inputState", 100], ["errors", 0]]`; `visibleColumns` brało `column[0]` i oddawało ostatniej kolumnie szerokość `0` (elastyczną).
+  - **Po:** same klucze, z kolumną `name` na początku, w modelu (testowalne w node):
+    ```js
+    var COMMON_END = ["signal", "power", "blockedText", "errors"];
+    var LAYOUTS = exports.LAYOUTS = {
+      wide: {
+        input: ["name", "room", "module", "channel", "deviceType", "circuit", "inputValue", "sensitivity", "reaction", "countTime", "count", "inputState"].concat(COMMON_END),
+        output: ["name", "room", "module", "channel", "deviceType", "state", "outputReaction", "duration"].concat(COMMON_END),
+        other: ["name", "room", "module", "channel", "deviceType"].concat(COMMON_END)
+      },
+      medium: {
+        input: ["name", "room", "module", "channel", "circuit", "inputValue", "sensitivity", "reaction", "inputState"].concat(COMMON_END),
+        output: ["name", "room", "module", "channel", "state", "outputReaction", "duration"].concat(COMMON_END),
+        other: ["name", "room", "module", "channel", "deviceType"].concat(COMMON_END)
+      },
+      narrow: {
+        input: ["name", "room", "module", "channel", "circuit", "reaction", "inputState", "errors"],
+        output: ["name", "room", "module", "channel", "state", "outputReaction", "duration", "errors"],
+        other: ["name", "room", "module", "errors"]
+      }
+    };
+    exports.layoutFor = function (windowWidth, tab) {
+      return LAYOUTS[windowWidth >= 1750 ? "wide" : windowWidth >= 1300 ? "medium" : "narrow"][tab];
+    };
+    var cellText = exports.cellText = function (row, column) {
+      if (column === "name") {
+        return `${row.name ?? ""}${row.kind?.input && row.kind?.output ? " (We/Wy)" : ""}`;
+      }
+      return isNil(row[column]) ? "" : String(row[column]);
+    };
+    ```
+    `visibleColumns(columns, rows)` działa na kluczach (`row[column]`) i zwraca `shown.length === columns.length ? columns : shown`; ostatnią kolumnę rozciąga teraz ekran (wpis 060). Progi szerokości bez zmian (≥ 1750 szerokie, ≥ 1300 średnie, reszta wąskie). Typ w układzie średnim jest tylko na „Pozostałych”, jak dotąd. Kolumna `outputReaction` pochodzi z `device.outputReactionType` (enum `OutputReactionType`, teksty `common.options.device.output_reaction_type.values.*`), bez zmian w `buildRows`.
+- **Plik:** `desktop/deviceTable/DeviceTableScreen.js` (nasz)
+  - **Przed:** `var shownColumns = deviceTableModel.visibleColumns((widthState[0] >= 1750 ? WIDE : widthState[0] >= 1300 ? MEDIUM : NARROW)[tab], tabBase);`
+  - **Po:** `var shownColumns = deviceTableModel.visibleColumns(deviceTableModel.layoutFor(widthState[0], tab), tabBase);` Stałe `WIDE`/`MEDIUM`/`NARROW`/`nameWidth` usunięte; `Row` rysuje wszystkie kolumny (także nazwę) przez `cellText`.
+- **Pliki:** `i18n/en.js`, blok `device_table`
+  - **Przed:** `"column_outputReaction": "Reaction",`
+  - **Po:** `"column_outputReaction": "Operating mode",` (pl „Sposób działania” bez zmian).
+- **Test:** `test/unit/desktop/deviceTableModel.test.js`: Moduł zaraz za Pomieszczeniem na Wejściach i Wyjściach przy 1000, 1300 i 1750 px; `outputReaction` na Wyjściach przy każdej szerokości; „Sposób działania” z `outputReactionType` (`SWITCH_BI` → `…output_reaction_type.values.switch_bi`, bez pola pusto); `visibleColumns` na kluczach.
+- **Sprawdzenie:** `npm --prefix work/working/tools test` (360 testów). Okno < 1300 px: Wejścia = Nazwa, Pomieszczenie, Moduł, Zacisk, Obwód, Reakcja, Stan, Usterki; Wyjścia = Nazwa, Pomieszczenie, Moduł, Zacisk, Stan, Sposób działania, Czas działania, Usterki. Okno 1300–1749 i ≥ 1750 px: Moduł zaraz za Pomieszczeniem. Po angielsku nagłówek „Operating mode”.
+
+### 060. Tabela obiektów: szerokość kolumn według treści, zmiana szerokości myszą, przewijanie w poziomie
+- **Platformy:** Linux, macOS (droga desktopowa)
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
+- **Powód:** uwagi użytkownika po teście 9a05418: stałe szerokości ucinały długie nazwy i zostawiały puste miejsce przy krótkich, użytkownik chce sam poszerzać kolumny. Przepis 19.
+- **Plik:** `desktop/deviceTable/deviceTableModel.js` (nasz), nowe eksporty:
+    ```js
+    var MIN_COLUMN_WIDTH = exports.MIN_COLUMN_WIDTH = 40;
+    var MAX_AUTO_WIDTH = 320;
+    var CELL_PADDING = 12;
+    var clampWidth = exports.clampWidth = function (width, max) {
+      return Math.min(max ?? Infinity, Math.max(MIN_COLUMN_WIDTH, Math.ceil(width)));
+    };
+    exports.autoWidths = function (columns, rows, measure, headers) { /* najdłuższy tekst nagłówka ("header") i komórek ("cell") + 12, w granicach 40–320 */ };
+    exports.columnWidths = function (columns, auto, stored) { /* szerokość użytkownika (liczba skończona, min 40) wygrywa z automatyczną */ };
+    ```
+- **Plik:** `desktop/deviceTable/deviceTableStore.js` (nasz): `loadColumnWidths()` / `saveColumnWidths(widths)`, klucz `localStorage` `deviceTable.columnWidths`, kształt `{ input: { room: 140 }, output: {…}, other: {…} }`, odczyt i zapis w `try/catch`, wartość niebędąca obiektem → `{}`.
+- **Plik:** `desktop/deviceTable/DeviceTableScreen.js` (nasz)
+  - Pomiar tekstu: `createMeasure()` = `canvas.getContext("2d").measureText` z czcionką `12px Jost` (nagłówek) i `13px Jost` (komórka), pamięć podręczna po tekście; po `document.fonts.ready` licznik `fontsState` tworzy pomiar od nowa (szerokości po wczytaniu fontu). Bez canvasu: 7 px na znak.
+  - `autoWidths` liczone z `tabBase` (cała zakładka bez szukania, filtrów i typów), nagłówek z dopiskiem ` ▼`, więc kolumny nie skaczą przy pisaniu i sortowaniu; `base` i `tabBase` w `useMemo`.
+  - Szerokości trafiają jako zmienne CSS `--dt-<kolumna>` na obudowę tabeli (`div` z `width: "max-content"`, `minWidth: "100%"`); `cellStyle(column, last)` = `width: var(--dt-…)`, a ostatnia kolumna `minWidth: var(--dt-…)`, `flexGrow: 1` (bierze resztę miejsca). Zmiana szerokości nie przerysowuje wierszy (`Row` w `React.memo`). Gdy kolumny się nie mieszczą, tabela przewija się w poziomie.
+  - Nagłówek: `div` z `PressableOpacity` (`flex: 1`, `minWidth: 0`) do sortowania i osobnym uchwytem `<div role="separator">` 6 px przy prawej krawędzi (`cursor: col-resize`, `touchAction: none`). `onPointerDown` (tylko lewy przycisk, `preventDefault`, `stopPropagation`, `setPointerCapture`) → przeciąganie z podglądem `draftWidthState`, po puszczeniu zapis `storeWidth(column, width)` przez `saveColumnWidths`, gdy szerokość się zmieniła. `onDoubleClick` → `storeWidth(column, null)`: powrót do szerokości automatycznej. Przeciąganie nie sortuje.
+- **Test:** `test/unit/desktop/deviceTableModel.test.js`: `autoWidths` = najdłuższy tekst komórki lub nagłówka + odstęp (nazwa z ` (We/Wy)`), granice 40–320; `columnWidths` z szerokością użytkownika, pomijanie wartości niebędących liczbą, `clampWidth`.
+- **Sprawdzenie:** `npm --prefix work/working/tools test`. W tabeli kolumny dopasowane do najdłuższego tekstu, ostatnia wypełnia resztę; pisanie w szukaniu nie zmienia szerokości. Przeciągnięcie krawędzi nagłówka zmienia szerokość (nie mniej niż 40 px) bez sortowania; po zamknięciu i otwarciu tabeli (i aplikacji) szerokość zostaje, osobno dla każdej zakładki; dwuklik na krawędzi przywraca szerokość automatyczną. Przy wąskim oknie i szerokich kolumnach pasek przewijania poziomego.
+
+### 061. Pozycja panelu „Lista obiektów” nazywa się „Lista urządzeń”
+- **Platformy:** Linux, macOS (droga desktopowa)
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
+- **Powód:** uwaga użytkownika po teście 9a05418: „obiekt” w aplikacji Satel to centrala z instalacją, a pozycja otwiera listę urządzeń. Teksty Satel o eksporcie i imporcie obiektu bez zmian. Przepisy 19 i 25.
+- **Pliki:** `i18n/pl.js`, `i18n/en.js`, blok `device_table`
+  - **Przed:** `"menu": "Lista obiektów",` / `"menu": "Object list",`
+  - **Po:** `"menu": "Lista urządzeń",` / `"menu": "Device list",`
+- **Sprawdzenie:** okno ≥ 900 px: w „Podsumowaniu” pierwsza pozycja „Lista urządzeń” („Device list” po angielsku), otwiera tabelę wszystkich urządzeń.
+
+### 062. Edytor TSH oznaczony jako BETA
+- **Platformy:** Linux, macOS (droga desktopowa)
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
+- **Powód:** decyzja użytkownika z 2026-11-15: edytor ekranów klawiatury (035–037, 044–054) działa poprawnie, ale nie jest dostatecznie przetestowany (zapis na prawdziwą klawiaturę, macOS, ciemny motyw). Użytkownik ma to widzieć przed otwarciem edytora i w nim, z prośbą o kopię konfiguracji przed zapisem. Przepis 01.
+- **Pliki:**
+  - `i18n/pl.js` i `i18n/en.js`, blok `tsh_editor` (kotwica `tsh_editor: {` z `title: "Edytor ekranów klawiatury",` / `title: "Keypad screen editor",`): za `title` dwa nowe klucze.
+    - **Przed (pl):**
+      ```js
+        tsh_editor: {
+          title: "Edytor ekranów klawiatury",
+          no_input: "Brak danych klawiatury. Otwórz edytor z ustawień klawiatury.",
+      ```
+    - **Po (pl):**
+      ```js
+        tsh_editor: {
+          title: "Edytor ekranów klawiatury",
+          beta: "BETA",
+          beta_hint: "Wersja testowa: działa, ale nie jest jeszcze dostatecznie przetestowana. Zrób kopię konfiguracji przed zapisem.",
+          no_input: "Brak danych klawiatury. Otwórz edytor z ustawień klawiatury.",
+      ```
+    - **Po (en):** `beta: "BETA",` i `beta_hint: "Beta: works, but not yet sufficiently tested. Back up the configuration before writing.",` za `title: "Keypad screen editor",`.
+  - `desktop/tshEditor/TshToolbar.js`: nowy komponent `BetaBadge` (przed komentarzem `// Shortcut list of the "?" popover`) i jego użycie jako pierwszego dziecka paska; komentarz nagłówka pliku wymienia plakietkę jako pierwszy element.
+    - **Dodane:**
+      ```js
+      // "BETA" badge at the start of the toolbar: the editor works but is not yet sufficiently tested. Returns the element.
+      var BetaBadge = function (props) {
+        var t = props.t;
+        return <span role="note" title={t("tsh_editor.beta_hint")} aria-label={t("tsh_editor.beta_hint")} style={{
+          display: "inline-flex",
+          alignItems: "center",
+          height: 20,
+          padding: "0 8px",
+          marginRight: 4,
+          borderRadius: 10,
+          border: `1px solid ${Color.warning500}`,
+          backgroundColor: Color.warning100,
+          color: Color.warning800,
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: 0.5,
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+          cursor: "help"
+        }}>{t("tsh_editor.beta")}</span>;
+      };
+      ```
+    - **Przed:** `<View ref={measured[0]} style={styles.bar} accessibilityRole="toolbar">{!tiny && <module28.Text style={styles.model} …`
+    - **Po:** `<View ref={measured[0]} style={styles.bar} accessibilityRole="toolbar"><BetaBadge t={t} />{!tiny && <module28.Text style={styles.model} …`
+    - Plakietka jest przy każdej szerokości paska (także poniżej `TINY_WIDTH`, gdy znika nazwa modelu). Kolory z palety motywu: jasny `#FEE0CC` / `#963C00` z ramką `#FA6400`, ciemny `#FFD19E` / `#9E6103` z ramką `#FF9F0A`.
+  - `screens/KeypadSettingsScreen.js`, przycisk „Edytuj ekrany” w bloku `{DesktopEditor.isDesktopEditor() && <View.default …` (kotwica `onPress={openTshEditor}`): do tytułu dopisane ` (BETA)`. Blok jest tylko na drodze desktopowej, więc telefon, tablet i okno < 900 px bez zmian.
+    - **Przed:**
+      ```js
+      title={(0, ChangeUserLanguage.GetCurrentLanguage)() === ExpanderInputType.HubUserLanguage.LANG_IT ? "Modifica schermi" : t("device.keypad_settings.edit_screens")} color={GetHexColorTransparent.Color.primary500} onPress={openTshEditor}
+      ```
+    - **Po:**
+      ```js
+      title={`${(0, ChangeUserLanguage.GetCurrentLanguage)() === ExpanderInputType.HubUserLanguage.LANG_IT ? "Modifica schermi" : t("device.keypad_settings.edit_screens")} (${t("tsh_editor.beta")})`} color={GetHexColorTransparent.Color.primary500} onPress={openTshEditor}
+      ```
+- **Sprawdzenie:** okno ≥ 900 px, urządzenie typu klawiatura → ustawienia: przycisk „Edytuj ekrany (BETA)” („Edit screens (BETA)”). W edytorze na lewym końcu paska narzędzi pomarańczowa plakietka „BETA”, po najechaniu podpowiedź „Wersja testowa: … Zrób kopię konfiguracji przed zapisem.”; plakietka zostaje po zwężeniu okna do ok. 900 px, czytelna w jasnym i ciemnym motywie. Okno < 900 px, telefon, tablet: przycisku nie ma, jak wcześniej. `npm --prefix work/working/tools test` przechodzi.
+
+### 063. Pełna wersja moda w aplikacji
+- **Platformy:** Linux, macOS
+- **Wprowadzone:** 1.2.0-mod3.1, oryginał 1.2.0
+- **Powód:** prośba użytkownika z 2026-11-15: aplikacja pokazywała tylko wersję Satel `1.2.0`, nie było widać, który build moda działa. Pokazujemy pełną wersję portu (`work/working/VERSION` albo `BEWAVE_VERSION`, np. `1.2.0-mod3.1`). Tylko napis: `app.getVersion()` i `version` w `package.json` zostają wersją Satel (API, migracje, aktualizacje, `appVersion` raportów awarii, ścieżka `TSH_soft.exe`). Okna „O programie” oryginał nie ma. Przepis 07.
+- **Gdzie oryginał pokazuje wersję:**
+  - ekran powitalny (proces główny, `src/main/main.js`, funkcja `Fe()`): HTML z obrazem `splash.jpg` („MADE BY Satel”) i `<div class="version">` z wersją z `app.getVersion()` (w buildzie niespakowanym z `package.json`);
+  - `src/renderer/app/logic/AppVersionLabel.js` (`AppVersionLabel`, tylko `PlatformConstants.isWeb`, czyli desktop): dół panelu bocznego (`components/unnamed/module_843.js`, przy dolnej nawigacji) oraz ekrany bez połączenia z centralą (`module_1335.js`, `module_1401.js`, `fixed={true}`). Wersja z `misc/module_2572.js` (kopia `package.json` oryginału, `version: "1.2.0"`).
+- **Pliki nowe (kopiuj bez zmian):** `src/renderer/app/desktop/shared/modVersion.js` (`modVersion(fallback)`: napis `__BEWAVE_MOD_VERSION__` wstrzyknięty przez esbuild `define`, a gdy go nie ma albo jest pusty, `fallback`), test `test/unit/desktop/modVersion.test.js` (bez wstrzyknięcia, z wstrzyknięciem przez podmianę jak `define`, pusty napis).
+- **Plik:** `tools/build-app.mjs`
+  - **Kotwica:** `function extractOriginalTshAssets() {` (wpis 034) i oba wywołania `await esbuild.build({`.
+  - **Przed:**
+    ```js
+    // Satel graphics for the TSH screen editor preview: dist/tsh/ from the original's TSH_soft.exe (never committed).
+    // The original version is the part of working/VERSION (or BEWAVE_VERSION) before "-mod" (legacy "-port"), as in lib-version.sh.
+    function extractOriginalTshAssets() {
+      const working = path.resolve(src, '..');
+      const port = process.env.BEWAVE_VERSION || fs.readFileSync(path.join(working, 'VERSION'), 'utf8').trim();
+      const original = port.split('-mod')[0].split('-port')[0];
+    ...
+      target: kNodeTarget, logLevel: 'warning',
+    ...
+      target: kChromeTarget, logLevel: 'warning', logLimit: 15,
+    ```
+  - **Po:**
+    ```js
+    // Our full version: BEWAVE_VERSION or working/VERSION (e.g. "1.2.0-mod3.1"), as bw_port_version in lib-version.sh.
+    const working = path.resolve(src, '..');
+    const portVersion = process.env.BEWAVE_VERSION || fs.readFileSync(path.join(working, 'VERSION'), 'utf8').trim();
+    // Shown in the app (splash, version label) through desktop/shared/modVersion.js; app.getVersion() stays Satel's.
+    const kModVersionDefine = { __BEWAVE_MOD_VERSION__: JSON.stringify(portVersion) };
+
+    // Satel graphics for the TSH screen editor preview: dist/tsh/ from the original's TSH_soft.exe (never committed).
+    // The original version is the part of portVersion before "-mod" (legacy "-port"), as in lib-version.sh.
+    function extractOriginalTshAssets() {
+      const original = portVersion.split('-mod')[0].split('-port')[0];
+    ...
+      target: kNodeTarget, logLevel: 'warning', define: kModVersionDefine,
+    ...
+      target: kChromeTarget, logLevel: 'warning', logLimit: 15, define: kModVersionDefine,
+    ```
+- **Plik:** `src/main/main.js` (ekran powitalny)
+  - **Kotwica 1:** `var startAutoUpdater = require("./autoUpdater");` — za nią nowa linia:
+    ```js
+    var modVersion = require("../renderer/app/desktop/shared/modVersion.js").modVersion;
+    ```
+  - **Kotwica 2:** w funkcji z `path.join(process.resourcesPath, "splash.jpg")`.
+  - **Przed:** `` var l = isDev && c ? `${s}<br>(${c})` : s; ``
+  - **Po:** `` var l = isDev && c ? `${modVersion(s)}<br>(${c})` : modVersion(s); ``
+- **Plik:** `src/renderer/app/logic/AppVersionLabel.js`
+  - **Kotwica 1:** `var module2572 = require("../misc/module_2572.js");` — za nią nowa linia:
+    ```js
+    var modVersion = require("../desktop/shared/modVersion.js");
+    ```
+  - **Przed:** `children: [module2572.version, PlatformConstants.isDev && module2572.build && …`
+  - **Po:** `children: [(0, modVersion.modVersion)(module2572.version), PlatformConstants.isDev && module2572.build && …`
+  - Etykieta renderuje się tylko na desktopie (`isWeb`), styl i położenie bez zmian, więc telefon i tablet bez zmian.
+- **Sprawdzenie:** `npm --prefix work/working/tools test` (test `modVersion`). Bundel z `define` (`esbuild` na `src/main/main.js` z `define: { __BEWAVE_MOD_VERSION__: '"1.2.0-mod3.1"' }`) zawiera `var injected = true ? "1.2.0-mod3.1" : "";`. Po buildzie (`linux/build-linux.sh <katalog>`, do prób `BEWAVE_VERSION=1.2.0-mod9.9`): ekran powitalny pod napisem „MADE BY Satel” pokazuje `1.2.0-mod3.1` (albo nadpisaną wersję), dół panelu bocznego w oknie ≥ 900 px i ekran bez połączenia z centralą też; `dist/electron.entry.js` i `dist/bundle.web.js` nie zawierają `__BEWAVE_MOD_VERSION__`.

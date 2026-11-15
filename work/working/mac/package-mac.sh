@@ -4,9 +4,19 @@
 set -euo pipefail
 WORKING="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="${1:-$(cat "$WORKING/VERSION")}"
-PKG_VERSION="${VERSION/-port./.}"
+# Installer version: 1.2.0-mod3.0 -> 1.2.0.3.0 (sorts above the released 1.2.0.2), legacy 1.2.0-port.2 -> 1.2.0.2.
+case "$VERSION" in
+  *-mod*) PKG_VERSION="${VERSION/-mod/.}" ;;
+  *) PKG_VERSION="${VERSION/-port./.}" ;;
+esac
 IDENTIFIER="pl.satel.bewave.port"
 OUT="$WORKING/build/release"
+PKG="$OUT/BE-WAVE-Soft-$VERSION-arm64.pkg"
+# Every build gets a new name: an existing file is never overwritten.
+if [ -e "$PKG" ]; then
+  echo "FAIL $PKG already exists: bump working/VERSION (modX.Y) instead of overwriting a build" >&2
+  exit 1
+fi
 APP="$WORKING/build/mac/BE WAVE Soft.app"
 STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
@@ -59,7 +69,5 @@ fakeroot sh -c '
   (cd "$1/scripts" && find . | cpio -o --format odc --quiet) | gzip -6 > "$1/flat/base.pkg/Scripts"
   mkbom -u 0 -g 80 "$1/root" "$1/flat/base.pkg/Bom"
 ' sh "$STAGE"
-PKG="$OUT/BE-WAVE-Soft-$VERSION-arm64.pkg"
-rm -f "$PKG"
 (cd "$STAGE/flat" && xar --compression none -cf "$PKG" Distribution base.pkg)
 ls -la "$PKG"

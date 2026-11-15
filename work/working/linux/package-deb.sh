@@ -5,8 +5,19 @@
 set -euo pipefail
 WORKING="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="${1:-$(cat "$WORKING/VERSION")}"
-DEB_VERSION="${VERSION/-port./+port}"
+# 1.2.0-mod3.0 -> 1:1.2.0+mod3.0. Epoch 1, because dpkg sorts 1.2.0+mod3.0 below the released 1.2.0+port2; the file
+# name carries no epoch. The legacy 1.2.0-port.2 -> 1.2.0+port2 stays without one.
+case "$VERSION" in
+  *-mod*) DEB_VERSION="1:${VERSION/-mod/+mod}" ;;
+  *) DEB_VERSION="${VERSION/-port./+port}" ;;
+esac
 OUT="$WORKING/build/release"
+DEB="$OUT/bewave-soft_${DEB_VERSION#*:}_amd64.deb"
+# Every build gets a new name: an existing file is never overwritten.
+if [ -e "$DEB" ]; then
+  echo "FAIL $DEB already exists: bump working/VERSION (modX.Y) instead of overwriting a build" >&2
+  exit 1
+fi
 MAINTAINER="${BW_MAINTAINER:-BE WAVE Soft port <bewave-soft-port@users.noreply.github.com>}"
 STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
@@ -32,5 +43,5 @@ Maintainer: $MAINTAINER
 Description: BE WAVE Soft desktop port
  Linux port of the BE WAVE Soft hub client.
 CONTROL
-dpkg-deb --root-owner-group --build "$STAGE" "$OUT/bewave-soft_${DEB_VERSION}_amd64.deb" >/dev/null
-ls -la "$OUT/bewave-soft_${DEB_VERSION}_amd64.deb"
+dpkg-deb --root-owner-group --build "$STAGE" "$DEB" >/dev/null
+ls -la "$DEB"
