@@ -119,86 +119,103 @@ zobaczyć go w pełnym rozmiarze.
   <a href="docs/screenshots/24-ekran-glowny.png"><img src="docs/screenshots/24-ekran-glowny.png" alt="Ekran główny" width="70%"></a><br>
   <sub>Ekran główny: mniejsze zdjęcia pomieszczeń i menu ustawień po lewej (mody 23, 24, 25).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/19-tabela-urzadzen.png"><img src="docs/screenshots/19-tabela-urzadzen.png" alt="Tabela urządzeń" width="70%"></a><br>
   <sub>Tabela urządzeń: wejścia, wyjścia i pozostałe osobno, filtry i wyszukiwanie; niczym nie steruje (mod 19).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/26-sygnal-na-kafelkach.png"><img src="docs/screenshots/26-sygnal-na-kafelkach.png" alt="Pomieszczenie" width="45%"></a><br>
   <sub>Pomieszczenie: kafelki urządzeń z siłą sygnału i przycisk „Tabela urządzeń” w prawym górnym rogu (mody 24, 26).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/24-tabela-pomieszczenia.png"><img src="docs/screenshots/24-tabela-pomieszczenia.png" alt="Tabela urządzeń jednego pomieszczenia (mod 24)." width="70%"></a><br>
   <sub>Tabela urządzeń jednego pomieszczenia (mod 24).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/21-tabela-awarii.png"><img src="docs/screenshots/21-tabela-awarii.png" alt="Aktywne awarie w zwartej tabeli (mod 21)." width="70%"></a><br>
   <sub>Aktywne awarie w zwartej tabeli (mod 21).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/22-dziennik-zdarzen.png"><img src="docs/screenshots/22-dziennik-zdarzen.png" alt="Dziennik zdarzeń w wierszach, z wyszukiwaniem (mod 22)." width="60%"></a><br>
   <sub>Dziennik zdarzeń w wierszach, z wyszukiwaniem (mod 22).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/23-panel-boczny.png"><img src="docs/screenshots/23-panel-boczny.png" alt="Menu ustawień ze zwijanymi sekcjami" width="25%"></a><br>
   <sub>Menu ustawień ze zwijanymi sekcjami: „Pozostałe” zwinięte (mody 23, 25).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/23-panel-boczny-rozwiniety.png"><img src="docs/screenshots/23-panel-boczny-rozwiniety.png" alt="To samo menu z rozwiniętą sekcją „Pozostałe” (mody 23, 25)." width="25%"></a><br>
   <sub>To samo menu z rozwiniętą sekcją „Pozostałe” (mody 23, 25).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/25-integracja-monitoring.png"><img src="docs/screenshots/25-integracja-monitoring.png" alt="Ekran Integracja z pozycją „Monitoring” przeniesioną z menu (mod 25)." width="60%"></a><br>
   <sub>Ekran Integracja z pozycją „Monitoring” przeniesioną z menu (mod 25).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/18-lista-rutyn.png"><img src="docs/screenshots/18-lista-rutyn.png" alt="Lista rutyn jako tabela" width="70%"></a><br>
   <sub>Lista rutyn jako tabela: od razu widać warunki i akcje (mod 18).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/10-edycja-rutyny.png"><img src="docs/screenshots/10-edycja-rutyny.png" alt="Edycja rutyny" width="45%"></a><br>
   <sub>Edycja rutyny: pełny opis warunków („wszystkie z: …”) i przełącznik Oraz/Lub, zwarty układ (mody 10, 17).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/12-lista-wyzwalaczy.png"><img src="docs/screenshots/12-lista-wyzwalaczy.png" alt="Lista wyzwalaczy" width="45%"></a><br>
   <sub>Lista wyzwalaczy: najczęstsze na górze ze skrótami Alt+1…5, cała lista bez przewijania (mod 12).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/13-wybor-urzadzen.png"><img src="docs/screenshots/13-wybor-urzadzen.png" alt="Wybór urządzeń w panelu warunku" width="45%"></a><br>
   <sub>Wybór urządzeń w panelu warunku: zwinięte pomieszczenia, szukanie, wartość wybierana od razu (mody 13, 14, 15). W oknie od 1300 px panel stoi obok rutyny, w węższym zastępuje ją; „Zatwierdź” wraca do rutyny.</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/20-potwierdzenie.png"><img src="docs/screenshots/20-potwierdzenie.png" alt="Pytanie przed poleceniem dla wielu urządzeń, tu „Wyłącz wszystko” (mod 20)." width="60%"></a><br>
   <sub>Pytanie przed poleceniem dla wielu urządzeń, tu „Wyłącz wszystko” (mod 20).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/01-edytor-ekranow.png"><img src="docs/screenshots/01-edytor-ekranow.png" alt="Edytor ekranów klawiatur dotykowych (BETA)" width="70%"></a><br>
   <sub>Edytor ekranów klawiatur dotykowych (BETA): ekrany i warstwy po lewej, podgląd klawiatury w środku, właściwości ekranu po prawej (mod 01).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/01-edytor-widzet.png"><img src="docs/screenshots/01-edytor-widzet.png" alt="Edytor" width="70%"></a><br>
   <sub>Edytor: zaznaczony widżet i jego właściwości (położenie, wielkość, urządzenie, ikony) (mod 01).</sub>
 </p>
+<p>&nbsp;</p>
 
 <p align="center">
   <a href="docs/screenshots/01-edytor-ikony.png"><img src="docs/screenshots/01-edytor-ikony.png" alt="Edytor" width="70%"></a><br>
   <sub>Edytor: wybór ikony z siatki glifów klawiatury (mod 01).</sub>
 </p>
+<p>&nbsp;</p>
 
 ## Zbuduj instalator krok po kroku
 
