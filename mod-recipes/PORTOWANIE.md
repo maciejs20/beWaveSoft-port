@@ -1,13 +1,13 @@
 # Portowanie kolejnego wydania Satel
 
-Stan na 2026-11-15: oryginał 1.2.0 (Electron 44.9.3), ostatnie wydanie portu `1.2.0-port.2` (2026-11-14), w toku ([Unreleased] w `CHANGELOG.md`) przebudowa edytora ekranów TSH (wpisy 044–054). Procedura powstała przy przejściu 1.1.0 → 1.2.0 (`1.2.0-port.1`). Ten plik jest jedynym źródłem procedury portowania i zebranych ustaleń. `REJESTR-ZMIAN.md` („Odtworzenie po aktualizacji źródła”) ma jej skrót. Przy rozbieżności obowiązuje ten plik.
+Stan na 2026-11-15: oryginał 1.2.0 (Electron 44.9.3), ostatnie wydanie portu `1.2.0-port.2` (2026-11-14), następne `1.2.0-mod3.0` (nowy schemat wersji), w toku ([Unreleased] w `CHANGELOG.md`) przebudowa edytora ekranów TSH (wpisy 044–054). Procedura powstała przy przejściu 1.1.0 → 1.2.0 (`1.2.0-port.1`). Ten plik jest jedynym źródłem procedury portowania i zebranych ustaleń. `REJESTR-ZMIAN.md` („Odtworzenie po aktualizacji źródła”) ma jej skrót. Przy rozbieżności obowiązuje ten plik.
 
 ## Cel
 
 Przenieść port BE WAVE Soft (Linux x64, macOS arm64) na nowe wydanie Satel, np. 1.3.0. Wynik:
 - nowe zachowanie Satel w całości,
 - nasze zmiany 001–NNN z `REJESTR-ZMIAN.md` naniesione ponownie, z działaniem zmienionym tylko tam, gdzie wymusza to nowy kod,
-- buildy i instalatory obu platform, wersja `<oryginał>-port.1`,
+- buildy i instalatory obu platform, wersja `<oryginał>-mod<X+1>.0`,
 - dokumentacja: `CHANGELOG.md`, `REJESTR-ZMIAN.md`, `PORT-<wersja>-ANALIZA.md`.
 
 Oznaczenia w przykładach: `<ver>` to nowe wydanie (np. `1.3.0`), `<prev>` poprzednie (np. `1.2.0`), `<ev>` wersja Electrona nowego wydania. `BW` i `SCRATCH` to zmienne, które ustawia wykonujący port przed pierwszym poleceniem: `BW` to katalog główny repozytorium, `SCRATCH` dowolny pusty katalog tymczasowy, np.:
@@ -33,7 +33,7 @@ Decyzje stałe. Nie podnosimy ich ponownie, chyba że użytkownik sam do nich wr
 |---|---|---|
 | Platformy: tylko macOS i Linux. Windows jest poza zakresem, bo Satel wydaje na niego gotowy program. | 2026-10-30 | `CLAUDE.md` „Zasady” |
 | Każda zmiana dotyczy obu platform. Bez warunków typu `process.platform === "linux"`. Kod dla jednej platformy tylko wtedy, gdy nie da się inaczej (inne binarium, inne narzędzie systemowe, API tylko jednej platformy). Obecne wyjątki: wpis 004 (przepis 03, `password-store` i `safeStorage.setUsePlainTextEncryption` tylko na Linuksie) i wpis 006 (przepis 04, Wi-Fi przez `nmcli`). | 2026-10-30 | `CLAUDE.md` „Zasady”, `README.md` zasada 1 |
-| Każda zmiana aplikacji jest w `CHANGELOG.md` (Keep a Changelog) z wersją oryginału i naszą. Wersja ma postać `<oryginał>-port.<n>`, w `work/working/VERSION`. | 2026-10-30 | `CLAUDE.md`, `CHANGELOG.md` |
+| Każda zmiana aplikacji jest w `CHANGELOG.md` (Keep a Changelog) z wersją oryginału i naszą. Wersja ma postać `<oryginał>-modX.Y` (X rośnie przy nowych funkcjach, Y przy poprawkach; do `1.2.0-port.2` było `<oryginał>-port.<n>`), w `work/working/VERSION`. Pierwsze wydanie na nowym oryginale podbija X. | 2026-10-30, schemat mod 2026-11-15 | `CLAUDE.md`, `CHANGELOG.md` |
 | Każda zmiana funkcjonalna ma numerowany wpis w `REJESTR-ZMIAN.md`: pliki, kotwice z tekstu oryginału, dokładny kod przed i po, sprawdzenie. Numerów nie używa się ponownie. | 2026-10-30 | `CLAUDE.md`, `REJESTR-ZMIAN.md` |
 | Pracujemy na nazwanym kodzie w `work/working/src` i z niego budujemy. `work/working/app` trzyma tylko `package.json` i `node_modules`. | 2026-10-30 | `CLAUDE.md` |
 | Desktop i telefon/tablet to dwie osobne drogi. Zmiana interfejsu działa tylko na drodze desktopowej (szerokość okna co najmniej 900 px, przepis 08). Nowe zachowanie to nowe komponenty, stare ekrany dostają tylko rozgałęzienie. | 2026-10-30 | `CLAUDE.md`, `PROJEKT-RUTYNY.md` decyzja 5, `README.md` zasady 2–4 |
@@ -121,7 +121,7 @@ Skrypty budowania przy braku paczki wypisują te same polecenia i kończą się 
 ### 3. Znacznik ostatniego portu poprzedniej wersji
 
 ```sh
-cd $BW && git tag <prev>-port.<n>
+cd $BW && git tag <prev>-mod<X>.<Y>
 ```
 Istnieją `1.1.0-port.3` i `1.2.0-port.1`. Wydanie `1.2.0-port.2` (commit `a0c5cce`, 2026-11-14) nie ma znacznika: przed portem 1.3.0 dodaj go (`git tag 1.2.0-port.2 a0c5cce`), a jeśli po nim wyjdzie kolejne wydanie 1.2.0 (np. z przebudową edytora TSH z [Unreleased]), oznacz ostatnie. Bez znacznika nie da się później zbudować starej wersji ani porównać.
 
@@ -248,22 +248,22 @@ Nie budować do `work/working/build/linux`, gdy aplikacja z niego działa.
 ### 11. Instalatory
 
 ```sh
-$BW/work/working/linux/package-deb.sh      # .deb, wersja Debiana <ver>+port<n>, buduje w katalogu tymczasowym
+$BW/work/working/linux/package-deb.sh      # .deb, wersja Debiana 1:<ver>+mod<X>.<Y> (epoka, bo dawne +port<n> byłoby „nowsze”), buduje w katalogu tymczasowym
 $BW/work/working/mac/package-mac.sh        # .pkg arm64, wymaga xar, mkbom (bomutils), cpio, fakeroot
 ```
 Wynik w `work/working/build/release`. Oba skrypty same budują aplikację od nowa (`package-deb.sh` w katalogu tymczasowym, `package-mac.sh` do `work/working/build/mac`), więc wcześniejszy build z kroku 10 nie jest potrzebny. Pole `Maintainer` w `.deb` ustawia zmienna `BW_MAINTAINER` (domyślnie neutralna nazwa projektu). Obie wersje brane z `work/working/VERSION`, więc najpierw krok 12.1.
 
 ### 12. Dokumentacja
 
-1. `work/working/VERSION` = `<ver>-port.1`.
-2. `CHANGELOG.md`: nagłówek `## [<ver>-port.1] - RRRR-MM-DD`, linia `Oryginał: BE WAVE Soft <ver> (Electron <ev>).`, `### Summary` z tym, co sprawdzono (uruchomione, tylko zbudowane, niesprawdzone), potem `Added`/`Changed`/`Fixed`/`Removed`/`Documentation`. Odnośnik na dole pliku.
+1. `work/working/VERSION` = `<ver>-mod<X+1>.0`.
+2. `CHANGELOG.md`: nagłówek `## [<ver>-mod<X+1>.0] - RRRR-MM-DD`, linia `Oryginał: BE WAVE Soft <ver> (Electron <ev>).`, `### Summary` z tym, co sprawdzono (uruchomione, tylko zbudowane, niesprawdzone), potem `Added`/`Changed`/`Fixed`/`Removed`/`Documentation`. Odnośnik na dole pliku.
 3. `REJESTR-ZMIAN.md`: zmiana „Wersja bazowa wszystkich wpisów”, punkt „W <ver>” w każdym wpisie, którego kotwica albo kod się zmieniły, nowe numerowane wpisy dla potrzeb portu (jak 032, 033).
 4. `PORT-<ver>-ANALIZA.md` z kroku 5.
 5. `mod-recipes/`: aktualizacja przepisu, który trzeba było zaprojektować od nowa, i tabel w `README.md` dla nowych wpisów. Ten plik: nowe ustalenia i luki.
 
 ### 13. Commity
 
-Na `main`, po angielsku, krótkie i tematyczne (wzór: `8ecc64a` narzędzia, `17ff108` kod, `26841d6` dokumentacja), prefiks `<ver>-port.<n>: …` dla zmian wydania, `docs: …` dla samej dokumentacji. Pliki dodawać po ścieżkach, nigdy `git add -A`. Bez `Co-Authored-By` i innych śladów AI. Na końcu znacznik `<ver>-port.1` przy kolejnym porcie (krok 3).
+Na `main`, po angielsku, krótkie i tematyczne (wzór: `8ecc64a` narzędzia, `17ff108` kod, `26841d6` dokumentacja), prefiks `<ver>-modX.Y: …` dla zmian wydania, `docs: …` dla samej dokumentacji. Pliki dodawać po ścieżkach, nigdy `git add -A`. Bez `Co-Authored-By` i innych śladów AI. Na końcu znacznik `<ver>-port.1` przy kolejnym porcie (krok 3).
 
 ## Kontrola jakości przed wydaniem
 

@@ -45,8 +45,8 @@ Potrzebne: Linux albo macOS, Node 22, ok. 12 GB RAM (deobfuskacja), `git curl un
    `REJESTR-ZMIAN.md`. Przepisy kotwiczą na stałych tekstach, więc agent da radę, tylko z większą uwagą.
 2. Złożenie źródła: `cp -an $BW/work/deobfuscated/1.2.0/named/. $BW/work/working/src/` (`-n` zostawia nasze pliki).
 3. `work/working/app`: krok 7 z PORTOWANIE.md (`package.json` i `node_modules` z oryginału, bez binariów Windows).
-4. Zmiany w plikach Satel nanosi agent, przepis po przepisie, w kolejności zależności z tabeli w
-   [README.md](README.md) (najpierw 02–08, potem 01 i 09–26). Prompt poniżej.
+4. Zmiany w plikach Satel nanosi agent, przepis po przepisie, w kolejności z sekcji „Kolejność” w
+   [README.md](README.md). Prompt poniżej.
 5. Build i test: `work/working/linux/build-linux.sh`, `work/working/mac/build-mac.sh`, testy jednostkowe,
    uruchomienie na osobnym profilu (krok 10 PORTOWANIE.md). Instalatory: krok 11.
 
