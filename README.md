@@ -351,6 +351,12 @@ Dlatego każdy etap i każdy mod niech kończy się commitem.
   starszych macOS: prawy przycisk → „Otwórz”). Instalator kopiuje aplikację do `/Applications` i podpisuje ją lokalnie, bo macOS na
   arm64 nie uruchamia niepodpisanego kodu.
 
+<p align="center">
+  <a href="docs/screenshots/07-instalator-mac.png"><img src="docs/screenshots/07-instalator-mac.png" alt="Instalator macOS" width="50%"></a><br>
+  <sub>Instalator macOS (plik .pkg): kliknij „Continue” i przejdź kolejne kroki.</sub>
+</p>
+<p>&nbsp;</p>
+
 Pierwsze uruchomienie nowej wersji może zmienić format lokalnej bazy, więc powrót do starszej wersji nie jest
 obsługiwany.
 
